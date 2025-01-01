@@ -21,7 +21,7 @@ void PacManPlayer::Update() {
 
 
 }
-
+//
 void PacManPlayer::Render() {
 
 	mPacMan->Render();
