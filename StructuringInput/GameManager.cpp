@@ -47,8 +47,13 @@ namespace SDLCore {
 	//meant to be used to check for input in other managers
 	void GameManager::Update() {
 
-		mInput->SetMouseAxis();
+		mInput->Update();
 		mScreen->Update();
+	}
+
+	void GameManager::LateUpdate() {
+
+		mInput->LateUpdate();
 	}
 
 	//rendering each manager
@@ -72,6 +77,7 @@ namespace SDLCore {
 			//call early update (input manager)
 			Update();
 			//call updates
+			LateUpdate();
 			//Render last
 			Render();
 		}

@@ -20,32 +20,22 @@ namespace SDLCore {
 
 	ScreenManager::ScreenManager() {
 
-		mMap = new GameMap;
-		mPacMan = new PacManPlayer;
-		
-		int pacXOffset = 0, pacYOffset = 3;
-		mPacMan->mPacMan->PositionTextureArea(mMap->mGrid->tiles[657].x, mMap->mGrid->tiles[657].y - pacYOffset);
-		mPacMan->mPacMan->ScaleTextureArea(2);
+		mGameScreen = new GameScreen;
 	}
 
 	ScreenManager::~ScreenManager() {
 
-		delete mMap;
-		mMap = NULL;
-
-		delete mPacMan;
-		mPacMan = NULL;
+		delete mGameScreen;
+		mGameScreen = NULL;
 	}
 
 	void ScreenManager::Update() {
 
-		mMap->Update();
-		mPacMan->Update();
+		mGameScreen->Update();
 	}
 
 	void ScreenManager::Render() {
 
-		mMap->Render();
-		mPacMan->Render();
+		mGameScreen->Render();
 	}
 }

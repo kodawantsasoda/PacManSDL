@@ -1,7 +1,6 @@
 #ifndef _SCREENMANAGER_H
 #define _SCREENMANAGER_H
-#include "GameMap.h"
-#include "PacManPlayer.h"
+#include "GameScreen.h"
 
 /*this class is the most prone to change of the namespace SDLCore, in that it largely revolves around the functionailty of the game...
 * Respnsible for managing everything you see on the screen. Notably, switching between game states like start screen, pause, play, etc...*/
@@ -21,10 +20,12 @@ namespace SDLCore {
 
 
 	private:
+
 		static ScreenManager* sInstance;
 
-		GameMap* mMap;
-		PacManPlayer* mPacMan;
+		GameScreen* mGameScreen;
+		//GameMap* mMap;
+		//PacManPlayer* mPacMan;
 	};
 }
 

@@ -72,10 +72,10 @@ namespace SDLCore{
 		mTextureArea.y = y;
 	}
 
-	void Texture::ScaleTextureArea(int scaleFactor) {
+	void Texture::ScaleTextureArea(int scaleFactor, int offSetW, int offSetH) {
 
-		mTextureArea.w *= scaleFactor;
-		mTextureArea.h *= scaleFactor;
+		mTextureArea.w = mTextureArea.w * scaleFactor - offSetW;
+		mTextureArea.h = mTextureArea.h * scaleFactor - offSetH;
 	}
 
 	SDL_Texture* Texture::GetLocalTexture() {

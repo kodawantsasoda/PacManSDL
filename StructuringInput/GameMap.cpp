@@ -33,10 +33,10 @@ GameMap::GameMap() {
 	mGrid = new Grid(square, columns, rows);
 
 	//getting the min/max of our x/y valyes to identify the bounds of the map
-	mGridMinX = mGrid->tiles[0].x;
-	mGridMaxX = mGrid->tiles[mGrid->tiles.size() - 1].x;
-	mGridMinY = mGrid->tiles[0].y;
-	mGridMaxY = mGrid->tiles[mGrid->tiles.size() - 1].y;
+	mGridMinX = mGrid->mTiles[0].mTile.x;
+	mGridMaxX = mGrid->mTiles[mGrid->mTiles.size() - 1].mTile.x;
+	mGridMinY = mGrid->mTiles[0].mTile.y;
+	mGridMaxY = mGrid->mTiles[mGrid->mTiles.size() - 1].mTile.y;
 
 	//offset to include the squares that are to the right of x/y's max
 	mOffsetX = square.w;
@@ -90,9 +90,9 @@ void GameMap::Render() {
 	//rendering the map via render method of texture class
 	mMapTexture->Render();
 	//drawing each grid space one by one
-	for (auto tile : mGrid->tiles)
-		mGraphics->DrawGrid(tile);
+	for (auto tile : mGrid->mTiles)
+		//mGraphics->DrawGrid(tile.mTile);
 	
-	if(mHoveredTile != -1 && mHoveredTile < mGrid->tiles.size())
-		mGraphics->FillRectInGrid(mGrid->tiles[mHoveredTile], 255, 255, 255, 0);
+	if(mHoveredTile != -1 && mHoveredTile < mGrid->mTiles.size())
+		mGraphics->FillRectInGrid(mGrid->mTiles[mHoveredTile].mTile, 0, 255, 255, 0);
 }

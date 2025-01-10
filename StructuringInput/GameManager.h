@@ -33,6 +33,7 @@ namespace SDLCore {
 
 		//functions
 		void Update();
+		void LateUpdate();
 		void Render();
 	};
 }
