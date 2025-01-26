@@ -72,6 +72,26 @@ namespace SDLCore{
 		mTextureArea.y = y;
 	}
 
+	void Texture::LerpTextureArea(float xStart, float yStart, float xEnd, float yEnd, float time, float speed) {
+
+		time *= speed;
+
+		if (time <= 0.0f) {
+
+			mTextureArea.x = xStart;
+			mTextureArea.y = yStart;
+		}
+		else if (time >= 1.0f) {
+
+			mTextureArea.x = xEnd;
+			mTextureArea.y = yEnd;
+		}
+		else {
+			mTextureArea.x = std::round(xStart + (xEnd - xStart) * time);
+			mTextureArea.y = std::round(yStart + (yEnd - yStart) * time);
+		}
+	}
+
 	void Texture::ScaleTextureArea(int scaleFactor, int offSetW, int offSetH) {
 
 		mTextureArea.w = mTextureArea.w * scaleFactor - offSetW;

@@ -135,6 +135,7 @@
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameScreen.cpp" />
+    <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameScreen.h" />
+    <ClInclude Include="Ghost.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="InputManager.h" />

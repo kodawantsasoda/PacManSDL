@@ -24,6 +24,10 @@ public:
 	void MoveDown();
 	void MoveLeft();
 	void MoveRight();
+	void Move();
+	bool mIsMoving;
+	int mTargetTileX;
+	int mTargetTileY;
 	Texture* mPacMan;
 
 	int CurrentPositionOnGrid;
@@ -33,6 +37,12 @@ private:
 
 	//Graphics* mGraphics;
 	InputManager* mInput;
+
+	float mMoveSpeed;
+
+	int startTicks;
+	int elapsedTicks;
+	float deltaTime;
 };
 
 #endif // !PacManPlayer

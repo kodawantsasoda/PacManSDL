@@ -46,6 +46,10 @@ GameMap::GameMap() {
 	mGrid->FitTextureOnGrid(square, columns, &mMapTexture->mTextureArea);
 
 	mHoveredTile = -1;
+
+	mStartTile = -1;
+	mEndTile = -1;
+	mHasSearched = true;
 }
 
 GameMap::~GameMap() {
@@ -79,11 +83,143 @@ bool GameMap::isMouseInGrid() {
 void GameMap::CalculateTileIndexFromMouse() {
 	//finding the index of the tile that is within the bounds of the position of the mouse
 	mHoveredTile = ((mInput->mMousePosY - square.y) / square.h * mGrid->GetColumns()) + ((mInput->mMousePosX - square.x) / square.w);
+
+	if (mInput->IsKeyHeld(SDL_SCANCODE_SPACE))
+		mStartTile = mHoveredTile;
+	if (mInput->IsKeyHeld(SDL_SCANCODE_TAB))
+		mEndTile = mHoveredTile;
+	if (mInput->IsKeyPressed(SDL_SCANCODE_BACKSPACE))
+		mHasSearched = false;
+
+}
+
+std::vector<int> GameMap::BFS() {
+
+	std::queue<int> explorationQueue;
+	std::vector<int> parentTiles(mGrid->GetColumns() * mGrid->GetRows(), NULL);
+	std::vector<bool> visitedTiles (mGrid->GetColumns() * mGrid->GetRows(), false);
+
+	explorationQueue.push(mStartTile);
+	visitedTiles[mStartTile] = true;
+
+	int steps = 0;
+
+	while (!explorationQueue.empty() && visitedTiles[mEndTile] == false) {
+
+		int currentTile = explorationQueue.front();
+		std::vector<int> neighbors{-1, -1, -1, -1};
+		CalculateNeighbors(&currentTile, &neighbors[0], &neighbors[1], &neighbors[2], &neighbors[3]);
+
+		printf("Exploring %d...\n", currentTile);
+		//pushing neighbors to be explored
+		for (int adjacentTile : neighbors) {
+
+			if (adjacentTile >= 0 && adjacentTile < visitedTiles.size()) {
+
+				if (!visitedTiles[adjacentTile] && !mGrid->mTiles[adjacentTile].mIsWall) {
+
+					explorationQueue.push(adjacentTile);
+					visitedTiles[adjacentTile] = true;
+					parentTiles[adjacentTile] = currentTile;
+				}
+			}
+		}
+			
+		explorationQueue.pop();
+		printf("%d Popped!\n", currentTile);
+		steps++;
+	}
+
+	printf("You went from %d to %d in %d number of steps!\n", mStartTile, mEndTile, steps);
+	mHasSearched = true;
+
+	PathFromBFS(parentTiles);
+
+	return parentTiles;
+}
+
+std::vector<int> GameMap::BFS(int start, int finish) {
+
+	std::queue<int> explorationQueue;
+	std::vector<int> parentTiles(mGrid->GetColumns() * mGrid->GetRows(), NULL);
+	std::vector<bool> visitedTiles(mGrid->GetColumns() * mGrid->GetRows(), false);
+
+	explorationQueue.push(start);
+	visitedTiles[start] = true;
+
+	int steps = 0;
+
+	while (!explorationQueue.empty() && visitedTiles[finish] == false) {
+
+		int currentTile = explorationQueue.front();
+		std::vector<int> neighbors{ -1, -1, -1, -1 };
+		CalculateNeighbors(&currentTile, &neighbors[0], &neighbors[1], &neighbors[2], &neighbors[3]);
+
+		//pushing neighbors to be explored
+		for (int adjacentTile : neighbors) {
+
+			if (adjacentTile >= 0 && adjacentTile < visitedTiles.size()) {
+
+				if (!visitedTiles[adjacentTile] && !mGrid->mTiles[adjacentTile].mIsWall) {
+
+					explorationQueue.push(adjacentTile);
+					visitedTiles[adjacentTile] = true;
+					parentTiles[adjacentTile] = currentTile;
+				}
+			}
+		}
+
+		explorationQueue.pop();
+		steps++;
+	}
+
+	mHasSearched = true;
+
+	return PathFromBFS(parentTiles, finish);
+}
+
+std::vector<int> GameMap::PathFromBFS(std::vector<int> parentTiles, int finish) {
+
+	std::vector<int> path;
+	for (int i = finish; i != NULL; i = parentTiles[i])
+		path.push_back(i);
+
+	std::reverse(path.begin(), path.end());
+
+	return path;
+}
+
+std::vector<int> GameMap::PathFromBFS(std::vector<int> parentTiles) {
+
+	std::vector<int> path;
+	for (int i = mEndTile; i != NULL; i = parentTiles[i])
+		path.push_back(i);
+
+	std::reverse(path.begin(), path.end());
+
+	printf("BFS Path: ");
+	for (int x : path)
+		printf("%d->", x);
+
+	return path;
+}
+
+void GameMap::CalculateNeighbors(int* currentTile, int* up, int* right, int* down, int* left) {
+
+	*up = *currentTile - mGrid->GetColumns();
+	*right = *currentTile + 1;
+	*down = *currentTile + mGrid->GetColumns();
+	*left = *currentTile - 1;
 }
 
 void GameMap::Update() {
 
 	isMouseInGrid();
+	if (!mHasSearched) {
+		BFS();
+		mHasSearched = true;
+	}
+		
 }
 
 void GameMap::Render() {
@@ -95,4 +231,9 @@ void GameMap::Render() {
 	
 	if(mHoveredTile != -1 && mHoveredTile < mGrid->mTiles.size())
 		mGraphics->FillRectInGrid(mGrid->mTiles[mHoveredTile].mTile, 0, 255, 255, 0);
+
+	if(mStartTile != -1)
+		mGraphics->FillRectInGrid(mGrid->mTiles[mStartTile].mTile, 0, 255, 255, 0);
+	if (mEndTile != -1)
+		mGraphics->FillRectInGrid(mGrid->mTiles[mEndTile].mTile, 255, 0, 255, 0);
 }

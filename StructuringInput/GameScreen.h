@@ -1,6 +1,7 @@
 #ifndef GameScreen_H
 #define GameScreen_H
 #include "PacManPlayer.h"
+#include "Ghost.h"
 #include "GameMap.h"
 
 using namespace SDLCore;
@@ -23,6 +24,7 @@ public:
 private:
 
 	PacManPlayer* mPacMan;
+	Ghost* mGhost;
 	GameMap* mGameMap;
 	InputManager* mInput;
 

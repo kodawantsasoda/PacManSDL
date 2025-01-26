@@ -23,6 +23,7 @@ namespace SDLCore {
 		void ClipLocalTexture(int x, int y, int w, int h);
 
 		void PositionTextureArea(int x, int y);
+		void LerpTextureArea(float xStart, float yStart, float xEnd, float yEnd, float time, float speed);
 		void ScaleTextureArea(int scaleFactor, int offSetW, int offSetH);
 
 		void Render();
