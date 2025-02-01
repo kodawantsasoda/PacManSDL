@@ -24,8 +24,9 @@ public:
 	void MoveDown();
 	void MoveLeft();
 	void MoveRight();
-	void Move();
+	void Move(char input);
 	bool mIsMoving;
+	char mCurrentInput;
 	int mTargetTileX;
 	int mTargetTileY;
 	Texture* mPacMan;
@@ -40,6 +41,7 @@ private:
 
 	float mMoveSpeed;
 
+	void ResetTimer();
 	int startTicks;
 	int elapsedTicks;
 	float deltaTime;

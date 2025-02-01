@@ -5,7 +5,7 @@ PacManPlayer::PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap) {
 	mInput = InputManager::Instance();
 
 	mPacMan = new Texture("PMSpriteSheet.png");
-	mPacMan->ClipLocalTexture(472, 0, 13, 15);
+	mPacMan->ClipLocalTexture(489, 0, 13, 15);
 
 	mMoveSquare = moveSquare;
 	mGameMap = gameMap;
@@ -13,11 +13,14 @@ PacManPlayer::PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap) {
 	CurrentPositionOnGrid = 29;
 	mScore.push_back(CurrentPositionOnGrid);
 
+	mIsMoving = false;
+	mCurrentInput = '0';
+
 	startTicks = SDL_GetTicks();
 	elapsedTicks = 0;
 	deltaTime = 0.0f;
 
-	mMoveSpeed = 3.0;
+	mMoveSpeed = 4.5;
 }
 
 PacManPlayer::~PacManPlayer() {
@@ -30,139 +33,113 @@ PacManPlayer::~PacManPlayer() {
 	mGameMap = NULL;
 }
 
-void PacManPlayer::Move() {
+void PacManPlayer::ResetTimer() {
+
+	startTicks = SDL_GetTicks();
+	elapsedTicks = 0;
+	deltaTime = 0.0f;
+}
+
+void PacManPlayer::Move(char input) {
 
 	elapsedTicks = SDL_GetTicks() - startTicks;
 	deltaTime = elapsedTicks * 0.001f;
 
-	if (mIsMoving) {
+	if (mPacMan->mTextureArea.x - mTargetTileX == 0 &&
+		mPacMan->mTextureArea.y - mTargetTileY == 0) {
 
-		//moving in the positive direction: down or right
-		if (mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.x - mTargetTileX < 0) {
-			//checking if the player moved to or past the target tile
-			if (mPacMan->mTextureArea.x >= mTargetTileX) {
+		mIsMoving = false;
 
-				//printf("Stopping");
-				mIsMoving = false;
-				CurrentPositionOnGrid++;
-			}
-		}
-		
-		else if (mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.y - mTargetTileY < 0) {
+		switch (input) {
 
-			if (mPacMan->mTextureArea.y >= mTargetTileY) {
-
-				printf("Stopping");
-				mIsMoving = false;
-				CurrentPositionOnGrid += mGameMap->mGrid->GetColumns();
-			}
-		}
-		//moving in the negative direction: up or left
-		else if (mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.x - mTargetTileX > 0) {
-			//checking if the player moved to or past the target tile
-			if (mPacMan->mTextureArea.x <= mTargetTileX) {
-
-				printf("Stopping");
-				mIsMoving = false;
-				CurrentPositionOnGrid--;
-			}
-		}
-
-		else {
-			//checking if the player moved to or past the target tile
-			if (mPacMan->mTextureArea.y <= mTargetTileY) {
-
-				printf("Stopping");
-				mIsMoving = false;
-				CurrentPositionOnGrid -= mGameMap->mGrid->GetColumns();
-			}
+		case 'W':
+			CurrentPositionOnGrid -= mGameMap->mGrid->GetColumns();
+			break;
+		case 'A':
+			CurrentPositionOnGrid--;
+			break;
+		case 'S':
+			CurrentPositionOnGrid += mGameMap->mGrid->GetColumns();
+			break;
+		case 'D':
+			CurrentPositionOnGrid++;
+			break;
 		}
 	}
 
-	if (!mIsMoving) {
-
+	if (!mIsMoving) 
 		mScore.push_back(CurrentPositionOnGrid);
-		//Graphics::Instance()->FillRectInGrid(mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile, 0, 0, 0, 0);
-	}
 
 	else
-		mPacMan->LerpTextureArea(mPacMan->mTextureArea.x, mPacMan->mTextureArea.y, mTargetTileX, mTargetTileY, deltaTime, mMoveSpeed);
+		mPacMan->LerpTextureArea(mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.x, mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.y, mTargetTileX, mTargetTileY, deltaTime, mMoveSpeed);
 }
 
 void PacManPlayer::Update() {
 
-	if (mIsMoving) {
-		//finish moving...
-		Move();
-	}
+	int nextTile = -1;
 
-	if (mInput->IsKeyPressed(SDL_SCANCODE_W) || mInput->IsKeyHeld(SDL_SCANCODE_W)) {
+	if (mIsMoving) 
+		Move(mCurrentInput);
 
-		if (mGameMap->mGrid->mTiles[CurrentPositionOnGrid - mGameMap->mGrid->GetColumns()].mIsWall)
-			printf("WALLMOFO");
-		
-		else if (mIsMoving == false) {
+	//only check input if pacman is not already moving
+	if (!mIsMoving) {
+		//determining the players next move based on input
+		if (mInput->IsKeyPressed(SDL_SCANCODE_W) || mInput->IsKeyHeld(SDL_SCANCODE_W)) {
 
-			mIsMoving = true;
-			mTargetTileX = mPacMan->mTextureArea.x;
-			mTargetTileY = abs(mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.y - mMoveSquare.h);
-			startTicks = SDL_GetTicks();
-			elapsedTicks = 0;
-			deltaTime = 0.0f;
+			nextTile = CurrentPositionOnGrid - mGameMap->mGrid->GetColumns();
+			mCurrentInput = 'W';
+		}
+
+		else if (mInput->IsKeyPressed(SDL_SCANCODE_A) || mInput->IsKeyHeld(SDL_SCANCODE_A)) {
+
+			nextTile = CurrentPositionOnGrid - 1;
+			mCurrentInput = 'A';
+		}
+
+		else if (mInput->IsKeyPressed(SDL_SCANCODE_S) || mInput->IsKeyHeld(SDL_SCANCODE_S)) {
+
+			nextTile = CurrentPositionOnGrid + mGameMap->mGrid->GetColumns();
+			mCurrentInput = 'S';
+		}
+
+		else if (mInput->IsKeyPressed(SDL_SCANCODE_D) || mInput->IsKeyHeld(SDL_SCANCODE_D)) {
+
+			nextTile = CurrentPositionOnGrid + 1;
+			mCurrentInput = 'D';
 		}
 	}
+	
+	
+	//if the requested tile on the map is NOT a wall
+	if (nextTile != -1 && !mIsMoving && !mGameMap->mGrid->mTiles[nextTile].mIsWall) {
 
-	if (mInput->IsKeyPressed(SDL_SCANCODE_A) || mInput->IsKeyHeld(SDL_SCANCODE_A)) {
-		if (mGameMap->mGrid->mTiles[CurrentPositionOnGrid - 1].mIsWall)
-			printf("WALLMOFO");
+		mIsMoving = true;
 
-		else if (mIsMoving == false) {
+		switch (mCurrentInput) {
 
-			mIsMoving = true;
-			mTargetTileX = abs(mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.x - mMoveSquare.w);
-			mTargetTileY = mPacMan->mTextureArea.y;
-			startTicks = SDL_GetTicks();
-			elapsedTicks = 0;
-			deltaTime = 0.0f;
-			//MoveRight();
-		}
-	}
-
-	if (mInput->IsKeyPressed(SDL_SCANCODE_S) || mInput->IsKeyHeld(SDL_SCANCODE_S)) {
-
-		if (mGameMap->mGrid->mTiles[CurrentPositionOnGrid + mGameMap->mGrid->GetColumns()].mIsWall)
-			printf("WALLMOFO");
-
-		else if (mIsMoving == false) {
-
-			mIsMoving = true;
-			mTargetTileX = mPacMan->mTextureArea.x;
+		case 'W':
+			mTargetTileX = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.x;
+			mTargetTileY = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.y - mMoveSquare.h;
+			break;
+		case 'A':
+			mTargetTileX = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.x - mMoveSquare.w;
+			mTargetTileY = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.y;
+			break;
+		case 'S':
+			mTargetTileX = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.x;
 			mTargetTileY = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.y + mMoveSquare.h;
-			startTicks = SDL_GetTicks();
-			elapsedTicks = 0;
-			deltaTime = 0.0f;
-		}
-	}
-
-	if (mInput->IsKeyPressed(SDL_SCANCODE_D) || mInput->IsKeyHeld(SDL_SCANCODE_D)) {
-
-		if (mGameMap->mGrid->mTiles[CurrentPositionOnGrid + 1].mIsWall)
-			printf("WALLMOFO");
-
-		else if(mIsMoving == false){
-
-			mIsMoving = true;
+			break;
+		case 'D':
 			mTargetTileX = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.x + mMoveSquare.w;
-			mTargetTileY = mPacMan->mTextureArea.y;
-			startTicks = SDL_GetTicks();
-			elapsedTicks = 0;
-			deltaTime = 0.0f;
-			//MoveRight();
+			mTargetTileY = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.y;
+			break;
 		}
+
+		ResetTimer();
 	}
+
 	if (mInput->IsKeyPressed(SDL_SCANCODE_SPACE))
 		printf("%d\n", CurrentPositionOnGrid);
-
 }
 //
 void PacManPlayer::Render() {

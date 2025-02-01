@@ -6,7 +6,7 @@ Ghost::Ghost(SDL_Rect moveSquare, GameMap* gameMap) {
 	mInput = InputManager::Instance();
 
 	mGhost = new Texture("PMSpriteSheet.png");
-	mGhost->ClipLocalTexture(472, 65, 15, 15);
+	mGhost->ClipLocalTexture(489, 0, 13, 15);;
 
 	mMoveSquare = moveSquare;
 	mGameMap = gameMap;
@@ -17,7 +17,7 @@ Ghost::Ghost(SDL_Rect moveSquare, GameMap* gameMap) {
 	elapsedTicks = 0;
 	deltaTime = 0.0f;
 
-	mMoveSpeed = 6.0;
+	mMoveSpeed = 4.0;
 	
 	mPacManTile = 29;
 	pathToPacMan = mGameMap->BFS(99, mPacManTile);

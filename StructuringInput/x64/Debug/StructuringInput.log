@@ -1,12 +1,6 @@
-﻿  Ghost.cpp
-E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(56,153): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(56,139): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(56,135): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(56,79): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  PacManPlayer.cpp
-E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(89,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(89,78): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(89,74): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(89,49): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Generating Code...
+﻿  PacManPlayer.cpp
+E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(74,154): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(74,140): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(74,136): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(74,80): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   StructuringInput.vcxproj -> E:\C++\SDL\StructuringInput\x64\Debug\StructuringInput.exe

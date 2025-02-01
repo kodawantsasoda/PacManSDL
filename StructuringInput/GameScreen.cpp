@@ -28,7 +28,7 @@ void GameScreen::StageEntities() {
 
 	//scaling and positioning pacman
 	int pacXOffset = 0, pacYOffset = 3;
-	mPacMan->mPacMan->PositionTextureArea(mGameMap->mGrid->mTiles[29].mTile.x, mGameMap->mGrid->mTiles[29].mTile.y - pacYOffset);
+	mPacMan->mPacMan->PositionTextureArea(mGameMap->mGrid->mTiles[29].mTile.x, mGameMap->mGrid->mTiles[29].mTile.y);
 	mPacMan->mPacMan->ScaleTextureArea(2, 0, 0);
 
 	mGhost->mGhost->PositionTextureArea(mGameMap->mGrid->mTiles[99].mTile.x - pacXOffset, mGameMap->mGrid->mTiles[99].mTile.y - pacYOffset);
