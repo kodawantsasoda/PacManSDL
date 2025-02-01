@@ -46,7 +46,6 @@ void Ghost::Move() {
 		if (mGhost->mTextureArea.x - mTargetTileX == 0 &&
 			mGhost->mTextureArea.y - mTargetTileY == 0) {
 
-			//printf("Stopping");
 			mIsMoving = false;
 			CurrentPositionOnGrid = pathToPacMan[mIt];
 		}
@@ -66,15 +65,12 @@ void Ghost::Update() {
 			mIsMoving = true;
 			mTargetTileX = mGameMap->mGrid->mTiles[pathToPacMan[mIt]].mTile.x;
 			mTargetTileY = mGameMap->mGrid->mTiles[pathToPacMan[mIt]].mTile.y;
-			//printf("\n%d\n", pathToPacMan[mIt]);
-			//printf("%d %d\n", mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.y, mTargetTileY);
 			startTicks = SDL_GetTicks();
 			elapsedTicks = 0;
 			deltaTime = 0.0f;
 		}
-		else {
+		else
 			Move();
-		}
 	}
 
 	if (mIsMoving == false && pathToPacMan[pathToPacMan.size() - 1] != mPacManTile) {
@@ -86,7 +82,6 @@ void Ghost::Update() {
 
 //
 void Ghost::Render() {
-
 
 	mGhost->Render();
 }
