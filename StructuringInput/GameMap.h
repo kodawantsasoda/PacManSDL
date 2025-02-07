@@ -21,6 +21,7 @@ public:
 	//testing for bfs
 	std::vector<int> BFS();
 	std::vector<int> BFS(int start, int finish);
+	//std::vector<int> BFS(int start, int finish, int mustInclude);
 	std::vector<int> PathFromBFS(std::vector<int> parentTiles);
 	std::vector<int> PathFromBFS(std::vector<int> parentTiles, int finish);
 

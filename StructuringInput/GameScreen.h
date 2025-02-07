@@ -24,7 +24,8 @@ public:
 private:
 
 	PacManPlayer* mPacMan;
-	Ghost* mGhost;
+	Ghost* mBlinky;
+	Ghost* mPinky;
 	GameMap* mGameMap;
 	InputManager* mInput;
 

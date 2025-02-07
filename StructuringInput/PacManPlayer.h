@@ -3,6 +3,8 @@
 #include "Texture.h"
 #include "InputManager.h"
 #include "GameMap.h"
+#include "Animator.h"
+#include "Collider.h"
 
 using namespace SDLCore;
 
@@ -19,12 +21,8 @@ public:
 	void Update();
 	void Render();
 
-	//bool CanMove(GameMap* map, int tileLocation);
-	void MoveUp();
-	void MoveDown();
-	void MoveLeft();
-	void MoveRight();
 	void Move(char input);
+	int GetTileInFrontOfMouth();
 	bool mIsMoving;
 	char mCurrentInput;
 	int mTargetTileX;
@@ -34,10 +32,13 @@ public:
 	int CurrentPositionOnGrid;
 	std::vector<int> mScore;
 
+	SDL_Rect mCollider;
+
 private:
 
 	//Graphics* mGraphics;
 	InputManager* mInput;
+	Animator* mAnimator;
 
 	float mMoveSpeed;
 

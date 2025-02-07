@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "InputManager.h"
 #include "GameMap.h"
+#include "PacManPlayer.h"
 
 using namespace SDLCore;
 
@@ -10,11 +11,12 @@ class Ghost {
 
 public:
 
-	Ghost(SDL_Rect moveSquare, GameMap* gameMap);
+	Ghost(SDL_Rect moveSquare, GameMap* gameMap, std::string name, PacManPlayer* pacMan);
 	~Ghost();
 
 	SDL_Rect mMoveSquare;
 	GameMap* mGameMap;
+	PacManPlayer* mPacMan;
 
 	void Update();
 	void Render();
@@ -28,6 +30,7 @@ public:
 	int mTargetTileX;
 	int mTargetTileY;
 	Texture* mGhost;
+	std::string mGhostName;
 
 	int CurrentPositionOnGrid;
 
@@ -35,6 +38,7 @@ private:
 
 	//Graphics* mGraphics;
 	InputManager* mInput;
+	Animator* mAnimator;
 
 	float mMoveSpeed;
 

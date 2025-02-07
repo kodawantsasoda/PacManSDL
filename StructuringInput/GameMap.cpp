@@ -186,6 +186,10 @@ std::vector<int> GameMap::PathFromBFS(std::vector<int> parentTiles, int finish) 
 
 	std::reverse(path.begin(), path.end());
 
+	printf("BFS Path: ");
+	for (int x : path)
+		printf("%d->", x);
+
 	return path;
 }
 

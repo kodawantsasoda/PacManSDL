@@ -1,15 +1,24 @@
 
 #include "Ghost.h"
 
-Ghost::Ghost(SDL_Rect moveSquare, GameMap* gameMap) {
+Ghost::Ghost(SDL_Rect moveSquare, GameMap* gameMap, std::string name, PacManPlayer* pacMan) {
 
 	mInput = InputManager::Instance();
 
 	mGhost = new Texture("PMSpriteSheet.png");
-	mGhost->ClipLocalTexture(489, 0, 13, 15);;
+
+	if(name == "Blinky")
+		mGhost->ClipLocalTexture(489, 65, 16, 16);
+	else
+		mGhost->ClipLocalTexture(489, 80, 16, 16);
+
+	mAnimator = new Animator(true, mGhost, 1, 0, 0.1);
+
+	mGhostName = name;
 
 	mMoveSquare = moveSquare;
 	mGameMap = gameMap;
+	mPacMan = pacMan;
 
 	CurrentPositionOnGrid = 99;
 
@@ -20,7 +29,11 @@ Ghost::Ghost(SDL_Rect moveSquare, GameMap* gameMap) {
 	mMoveSpeed = 4.0;
 	
 	mPacManTile = 29;
-	pathToPacMan = mGameMap->BFS(99, mPacManTile);
+
+	if(name == "Blinky")
+		pathToPacMan = mGameMap->BFS(99, mPacManTile);
+	else
+		pathToPacMan = mGameMap->BFS(400, mPacManTile);
 
 	mIt = 0;
 
@@ -35,6 +48,8 @@ Ghost::~Ghost() {
 	mGhost = NULL;
 
 	mGameMap = NULL;
+
+	mPacMan = NULL;
 }
 
 void Ghost::Move() {
@@ -57,6 +72,10 @@ void Ghost::Move() {
 
 void Ghost::Update() {
 
+	mAnimator->Animate();
+
+	mPacManTile = mPacMan->CurrentPositionOnGrid;
+
 	if (CurrentPositionOnGrid != pathToPacMan[pathToPacMan.size() - 1]) {
 
 		if (mIsMoving == false) {
@@ -75,8 +94,19 @@ void Ghost::Update() {
 
 	if (mIsMoving == false && pathToPacMan[pathToPacMan.size() - 1] != mPacManTile) {
 
+		int finalTile = mPacManTile;
 		mIt = 0;
-		pathToPacMan = mGameMap->BFS(CurrentPositionOnGrid, mPacManTile);
+
+		if(mGhostName == "Blinky")
+			pathToPacMan = mGameMap->BFS(CurrentPositionOnGrid, finalTile);
+		else {
+			if (!mGameMap->mGrid->mTiles[mPacMan->GetTileInFrontOfMouth()].mIsWall) {
+
+				pathToPacMan = mGameMap->BFS(CurrentPositionOnGrid, mPacMan->GetTileInFrontOfMouth());
+			}
+			else
+				pathToPacMan = mGameMap->BFS(CurrentPositionOnGrid, finalTile);
+		}
 	}
 }
 

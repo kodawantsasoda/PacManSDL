@@ -3,12 +3,17 @@
 PacManPlayer::PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap) {
 
 	mInput = InputManager::Instance();
-
-	mPacMan = new Texture("PMSpriteSheet.png");
-	mPacMan->ClipLocalTexture(489, 0, 13, 15);
-
 	mMoveSquare = moveSquare;
 	mGameMap = gameMap;
+
+	mPacMan = new Texture("PMSpriteSheet.png");
+	mPacMan->ClipLocalTexture(455, 0, 16, 16);
+	mPacMan->PositionTextureArea(mGameMap->mGrid->mTiles[29].mTile.x, mGameMap->mGrid->mTiles[29].mTile.y);
+	mPacMan->ScaleTextureArea(2, 0, 0);
+
+	mCollider = mPacMan->mTextureArea;
+
+	mAnimator = new Animator(true, mPacMan, 2, 0, 0.1);
 
 	CurrentPositionOnGrid = 29;
 	mScore.push_back(CurrentPositionOnGrid);
@@ -20,7 +25,7 @@ PacManPlayer::PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap) {
 	elapsedTicks = 0;
 	deltaTime = 0.0f;
 
-	mMoveSpeed = 4.5;
+	mMoveSpeed = 5.0;
 }
 
 PacManPlayer::~PacManPlayer() {
@@ -29,6 +34,9 @@ PacManPlayer::~PacManPlayer() {
 
 	delete mPacMan;
 	mPacMan = NULL;
+
+	delete mAnimator;
+	mAnimator = NULL;
 
 	mGameMap = NULL;
 }
@@ -40,7 +48,33 @@ void PacManPlayer::ResetTimer() {
 	deltaTime = 0.0f;
 }
 
+int PacManPlayer::GetTileInFrontOfMouth() {
+
+	switch (mCurrentInput) {
+
+	case 'W':
+		return CurrentPositionOnGrid - mGameMap->mGrid->GetColumns();
+		break;
+	case 'A':
+		return CurrentPositionOnGrid - 1;
+		break;
+	case 'S':
+		return CurrentPositionOnGrid + mGameMap->mGrid->GetColumns();
+		break;
+	case 'D':
+		return CurrentPositionOnGrid + 1;
+		break;
+	default:
+		return -1;
+	}
+}
+
 void PacManPlayer::Move(char input) {
+
+	mAnimator->Animate();
+
+	mCollider.x = mPacMan->mTextureArea.x + 5;
+	mCollider.y = mPacMan->mTextureArea.y + 5;
 
 	elapsedTicks = SDL_GetTicks() - startTicks;
 	deltaTime = elapsedTicks * 0.001f;
@@ -77,6 +111,8 @@ void PacManPlayer::Move(char input) {
 void PacManPlayer::Update() {
 
 	int nextTile = -1;
+
+	
 
 	if (mIsMoving) 
 		Move(mCurrentInput);
@@ -150,4 +186,6 @@ void PacManPlayer::Render() {
 	}
 	
 	mPacMan->Render();
+
+	//Graphics::Instance()->FillRectInGrid(mCollider, 255, 0, 0, 50);
 }
