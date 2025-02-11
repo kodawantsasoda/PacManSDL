@@ -38,6 +38,12 @@ Ghost::Ghost(SDL_Rect moveSquare, GameMap* gameMap, std::string name, PacManPlay
 	mIt = 0;
 
 	mIsMoving = false;
+
+	mCollider = mGhost->mTextureArea;
+	mCollider.w -= 12;
+	mCollider.h -= 12;
+	mCollider.x = mGhost->mTextureArea.x + (mGhost->mTextureArea.w - mCollider.w) / 2;
+	mCollider.y = mGhost->mTextureArea.y + (mGhost->mTextureArea.h - mCollider.h) / 2;
 }
 
 Ghost::~Ghost() {
@@ -53,6 +59,9 @@ Ghost::~Ghost() {
 }
 
 void Ghost::Move() {
+
+	mCollider.x = mGhost->mTextureArea.x + (mGhost->mTextureArea.w - mCollider.w) / 2;
+	mCollider.y = mGhost->mTextureArea.y + (mGhost->mTextureArea.h - mCollider.h) / 2;
 
 	elapsedTicks = SDL_GetTicks() - startTicks;
 	deltaTime = elapsedTicks * 0.001f;
@@ -114,4 +123,5 @@ void Ghost::Update() {
 void Ghost::Render() {
 
 	mGhost->Render();
+	Graphics::Instance()->FillRectInGrid(mCollider, 255, 0, 0, 50);
 }

@@ -3,6 +3,8 @@
 #include "PacManPlayer.h"
 #include "Ghost.h"
 #include "GameMap.h"
+#include "Collider.h"	
+#include <vector>
 
 using namespace SDLCore;
 
@@ -19,7 +21,7 @@ public:
 	void Render();
 
 	void StageEntities();
-	void MovementController();
+	void CollisionHandler();
 
 private:
 
@@ -29,6 +31,9 @@ private:
 	GameMap* mGameMap;
 	InputManager* mInput;
 
+	std::vector<Ghost*> mAllGhosts;
+	
+	bool mIsHit;
 };
 
 #endif

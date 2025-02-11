@@ -34,6 +34,8 @@ public:
 
 	int CurrentPositionOnGrid;
 
+	SDL_Rect mCollider;
+
 private:
 
 	//Graphics* mGraphics;

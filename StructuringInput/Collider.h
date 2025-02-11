@@ -4,18 +4,18 @@
 
 namespace SDLCore {
 
-	class Collider {
-	public:
-		Collider(SDL_Rect collider);
-		~Collider();
+	inline bool HasCollided(const SDL_Rect* entityMain, const SDL_Rect* opposingEntity) {
 
-		SDL_Rect mBoxCollider;
+		if (opposingEntity->x >= entityMain->x && 
+			opposingEntity->x <= entityMain->x + entityMain->w &&
+			opposingEntity->y >= entityMain->y &&
+			opposingEntity->y <= entityMain->y + entityMain->w) {
 
+			return true;
+		}
 
-	private:
-		bool HasCollided(SDL_Rect obj1, SDL_Rect obj2);
-
-	};
+		return false;
+	}
 }
 
 

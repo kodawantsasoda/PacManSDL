@@ -12,6 +12,10 @@ PacManPlayer::PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap) {
 	mPacMan->ScaleTextureArea(2, 0, 0);
 
 	mCollider = mPacMan->mTextureArea;
+	mCollider.w -= 12;
+	mCollider.h -= 12;
+	mCollider.x = mPacMan->mTextureArea.x + (mPacMan->mTextureArea.w - mCollider.w) / 2;
+	mCollider.y = mPacMan->mTextureArea.y + (mPacMan->mTextureArea.h - mCollider.h) / 2;
 
 	mAnimator = new Animator(true, mPacMan, 2, 0, 0.1);
 
@@ -73,8 +77,8 @@ void PacManPlayer::Move(char input) {
 
 	mAnimator->Animate();
 
-	mCollider.x = mPacMan->mTextureArea.x + 5;
-	mCollider.y = mPacMan->mTextureArea.y + 5;
+	mCollider.x = mPacMan->mTextureArea.x + (mPacMan->mTextureArea.w - mCollider.w) / 2;
+	mCollider.y = mPacMan->mTextureArea.y + (mPacMan->mTextureArea.h - mCollider.h) / 2;
 
 	elapsedTicks = SDL_GetTicks() - startTicks;
 	deltaTime = elapsedTicks * 0.001f;
@@ -187,5 +191,5 @@ void PacManPlayer::Render() {
 	
 	mPacMan->Render();
 
-	//Graphics::Instance()->FillRectInGrid(mCollider, 255, 0, 0, 50);
+	Graphics::Instance()->FillRectInGrid(mCollider, 255, 0, 0, 50);
 }

@@ -8,7 +8,12 @@ GameScreen::GameScreen() {
 	mPinky = new Ghost(mGameMap->square, mGameMap, "Pinky", mPacMan);
 	mInput = InputManager::Instance();
 
+	mAllGhosts.push_back(mBlinky);
+	mAllGhosts.push_back(mPinky);
+
 	StageEntities();
+
+	mIsHit = false;
 }
 
 GameScreen::~GameScreen() {
@@ -44,21 +49,33 @@ void GameScreen::StageEntities() {
 	//can pacnan move to this square?
 }
 
-void GameScreen::MovementController() {
+void GameScreen::CollisionHandler() {
+	
+	for (auto ghost : mAllGhosts) {
 
+		if (HasCollided(&mPacMan->mCollider, &ghost->mCollider)) {
+
+			printf("Collided with: %s\n", ghost->mGhostName.c_str());
+			mIsHit = true;
+		}
+	}
 }
 
 void GameScreen::Update() {
 
 	//MovementController();
-	mPacMan->Update();
-	mBlinky->Update();
-	mBlinky->mPacManTile = mPacMan->CurrentPositionOnGrid;
-	mPinky->Update();
-	mPinky->mPacManTile = mPacMan->CurrentPositionOnGrid;
-	mGameMap->Update();
 
+	if (!mIsHit) {
+		mPacMan->Update();
+		mBlinky->Update();
+		mBlinky->mPacManTile = mPacMan->CurrentPositionOnGrid;
+		mPinky->Update();
+		mPinky->mPacManTile = mPacMan->CurrentPositionOnGrid;
+		mGameMap->Update();
 
+		CollisionHandler();
+	}
+	
 }
 
 void GameScreen::Render() {
