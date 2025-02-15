@@ -223,7 +223,7 @@ void GameMap::Render() {
 	mMapTexture->Render();
 	//drawing each grid space one by one
 	for (auto tile : mGrid->mTiles)
-		//mGraphics->DrawGrid(tile.mTile);
+		mGraphics->DrawGrid(tile.mTile);
 	
 	if(mHoveredTile != -1 && mHoveredTile < mGrid->mTiles.size())
 		mGraphics->FillRectInGrid(mGrid->mTiles[mHoveredTile].mTile, 0, 255, 255, 0);

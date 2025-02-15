@@ -14,6 +14,8 @@ Ghost::Ghost(SDL_Rect moveSquare, GameMap* gameMap, std::string name, PacManPlay
 
 	mAnimator = new Animator(true, mGhost, 1, 0, 0.1);
 
+	mGhost->ScaleTextureArea(3, 10, 10);
+
 	mGhostName = name;
 
 	mMoveSquare = moveSquare;
@@ -26,12 +28,12 @@ Ghost::Ghost(SDL_Rect moveSquare, GameMap* gameMap, std::string name, PacManPlay
 	elapsedTicks = 0;
 	deltaTime = 0.0f;
 
-	mMoveSpeed = 4.0;
+	mMoveSpeed = 1.0;
 	
-	mPacManTile = 29;
+	mPacManTile = 657;
 
 	if(name == "Blinky")
-		pathToPacMan = mGameMap->BFS(99, mPacManTile);
+		pathToPacMan = mGameMap->BFS(321, mPacManTile);
 	else
 		pathToPacMan = mGameMap->BFS(400, mPacManTile);
 
@@ -76,7 +78,12 @@ void Ghost::Move() {
 	}
 
 	if (mIsMoving)
-		mGhost->LerpTextureArea(mGameMap->mGrid->mTiles[pathToPacMan[mIt - 1]].mTile.x, mGameMap->mGrid->mTiles[pathToPacMan[mIt - 1]].mTile.y, mTargetTileX, mTargetTileY, deltaTime, mMoveSpeed);
+		mGhost->LerpTextureArea(mGameMap->mGrid->mTiles[pathToPacMan[mIt - 1]].mTile.x - 8, mGameMap->mGrid->mTiles[pathToPacMan[mIt - 1]].mTile.y - 8, mTargetTileX, mTargetTileY, deltaTime, mMoveSpeed);
+}
+
+void Ghost::GameOver() {
+
+	mAnimator->Animate();
 }
 
 void Ghost::Update() {
@@ -91,8 +98,8 @@ void Ghost::Update() {
 
 			mIt++;
 			mIsMoving = true;
-			mTargetTileX = mGameMap->mGrid->mTiles[pathToPacMan[mIt]].mTile.x;
-			mTargetTileY = mGameMap->mGrid->mTiles[pathToPacMan[mIt]].mTile.y;
+			mTargetTileX = mGameMap->mGrid->mTiles[pathToPacMan[mIt]].mTile.x - 8;
+			mTargetTileY = mGameMap->mGrid->mTiles[pathToPacMan[mIt]].mTile.y - 8;
 			startTicks = SDL_GetTicks();
 			elapsedTicks = 0;
 			deltaTime = 0.0f;

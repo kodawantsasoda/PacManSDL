@@ -4,6 +4,20 @@ namespace SDLCore {
 
 	Animator::Animator(bool isSpriteSheet, Texture* referenceTexture, int numberOfSprites, int startFrame, float speed) {
 
+		Init(isSpriteSheet, referenceTexture, numberOfSprites, startFrame, speed);
+
+		startTicks = SDL_GetTicks();
+		elapsedTicks = 0;
+		deltaTime = 0.0f;
+	}
+
+	Animator::~Animator() {
+
+		mText = NULL;
+	}
+
+	void Animator::Init(bool isSpriteSheet, Texture* referenceTexture, int numberOfSprites, int startFrame, float speed) {
+
 		mText = referenceTexture;
 		this->numberOfSprites = numberOfSprites;
 		this->isSpriteSheet = isSpriteSheet;
@@ -14,14 +28,7 @@ namespace SDLCore {
 		x = mText->mImageClip.x;
 		y = mText->mImageClip.y;
 
-		startTicks = SDL_GetTicks();
-		elapsedTicks = 0;
-		deltaTime = 0.0f;
-	}
-
-	Animator::~Animator() {
-
-		mText = NULL;
+		mAnimationCycleComplete = false;
 	}
 
 	void Animator::ResetTimer() {
@@ -46,12 +53,18 @@ namespace SDLCore {
 
 				if (mCurrentFrame > numberOfSprites) {
 
-					mCurrentFrame = mStartFrame;
+					mCurrentFrame = 0;
 					mText->mImageClip.x = x;
 				}
 				
 				else
-					mText->mImageClip.x += mText->mImageClip.w;
+					mText->mImageClip.x = x + (mText->mImageClip.w * mCurrentFrame);
+
+				if (mCurrentFrame == mStartFrame) {
+
+					mAnimationCycleComplete = true;
+					//printf("CYCLED\n");
+				}
 			}
 		}
 	}

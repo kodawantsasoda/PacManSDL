@@ -34,6 +34,12 @@ private:
 	std::vector<Ghost*> mAllGhosts;
 	
 	bool mIsHit;
+	bool mIsDying;
+	bool mIsReady;
+
+	int startTicks;
+	int elapsedTicks;
+	float deltaTime;
 };
 
 #endif

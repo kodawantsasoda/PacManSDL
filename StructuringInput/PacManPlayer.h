@@ -34,11 +34,15 @@ public:
 
 	SDL_Rect mCollider;
 
+	bool GameOver();
+	void SetDeathFrame();
+
 private:
 
 	//Graphics* mGraphics;
 	InputManager* mInput;
 	Animator* mAnimator;
+	Animator* mDeathAnimator;
 
 	float mMoveSpeed;
 

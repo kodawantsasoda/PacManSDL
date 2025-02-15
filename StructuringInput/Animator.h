@@ -6,15 +6,20 @@ namespace SDLCore {
 
 	class Animator {
 	public:
-		Animator(bool isSpriteSheet, Texture* mReferenceTexture, int numberOfSprites, int startFrame, float speed);
+		Animator(bool isSpriteSheet, Texture* referenceTexture, int numberOfSprites, int startFrame, float speed);
 		~Animator();
 
 		void Animate();
+
+		void Init(bool isSpriteSheet, Texture* referenceTexture, int numberOfSprites, int startFrame, float speed);
+
+		bool mAnimationCycleComplete;
 
 
 	private:
 		Texture* mText;
 		bool isSpriteSheet;
+		
 		int numberOfSprites;
 		int x, y;
 		void ResetTimer();

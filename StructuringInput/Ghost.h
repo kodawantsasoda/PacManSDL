@@ -36,6 +36,8 @@ public:
 
 	SDL_Rect mCollider;
 
+	void GameOver();
+
 private:
 
 	//Graphics* mGraphics;

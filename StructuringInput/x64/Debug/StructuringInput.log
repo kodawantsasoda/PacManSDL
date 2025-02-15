@@ -1,6 +1,7 @@
-﻿  GameManager.cpp
-  GameScreen.cpp
-  ScreenManager.cpp
-  main.cpp
-  Generating Code...
+﻿  Ghost.cpp
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(15,47): warning C4305: 'argument': truncation from 'double' to 'float'
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(81,161): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(81,147): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(81,142): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(81,82): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   StructuringInput.vcxproj -> E:\C++\SDL\StructuringInput\x64\Debug\StructuringInput.exe
