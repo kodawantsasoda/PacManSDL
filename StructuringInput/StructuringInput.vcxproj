@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\C++\sdlFiles\SDL2-2.30.10\include;E:\C++\sdlFiles\SDL2_image-2.8.2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\C++\sdlFiles\SDL2-2.30.10\lib\x64;E:\C++\sdlFiles\SDL2_image-2.8.2\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\C++\sdlFiles\SDL2-2.30.10\include;E:\C++\sdlFiles\SDL2_ttf-2.24.0\include;E:\C++\sdlFiles\SDL2_image-2.8.2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\C++\sdlFiles\SDL2-2.30.10\lib\x64;E:\C++\sdlFiles\SDL2_ttf-2.24.0\lib\x64;E:\C++\sdlFiles\SDL2_image-2.8.2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -112,7 +112,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -145,6 +145,8 @@
     <ClCompile Include="PacManPlayer.cpp" />
     <ClCompile Include="ScreenManager.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator.h" />
@@ -161,6 +163,8 @@
     <ClInclude Include="ScreenManager.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Tiles.h" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -3,6 +3,7 @@
 #include "PacManPlayer.h"
 #include "Ghost.h"
 #include "GameMap.h"
+#include "UI.h"
 #include "Collider.h"	
 #include <vector>
 
@@ -29,6 +30,7 @@ private:
 	Ghost* mBlinky;
 	Ghost* mPinky;
 	GameMap* mGameMap;
+	UI* mUI;
 	InputManager* mInput;
 
 	std::vector<Ghost*> mAllGhosts;
@@ -36,6 +38,7 @@ private:
 	bool mIsHit;
 	bool mIsDying;
 	bool mIsReady;
+	bool mIsPlaying;
 
 	int startTicks;
 	int elapsedTicks;

@@ -7,6 +7,8 @@ Ghost::Ghost(SDL_Rect moveSquare, GameMap* gameMap, std::string name, PacManPlay
 
 	mGhost = new Texture("PMSpriteSheet.png");
 
+	mTimer = Timer();
+
 	if(name == "Blinky")
 		mGhost->ClipLocalTexture(489, 65, 16, 16);
 	else
@@ -24,18 +26,14 @@ Ghost::Ghost(SDL_Rect moveSquare, GameMap* gameMap, std::string name, PacManPlay
 
 	CurrentPositionOnGrid = 99;
 
-	startTicks = SDL_GetTicks();
-	elapsedTicks = 0;
-	deltaTime = 0.0f;
-
-	mMoveSpeed = 1.0;
+	mMoveSpeed = 6.15;
 	
 	mPacManTile = 657;
 
 	if(name == "Blinky")
 		pathToPacMan = mGameMap->BFS(321, mPacManTile);
 	else
-		pathToPacMan = mGameMap->BFS(400, mPacManTile);
+		pathToPacMan = mGameMap->BFS(375, mPacManTile);
 
 	mIt = 0;
 
@@ -65,8 +63,8 @@ void Ghost::Move() {
 	mCollider.x = mGhost->mTextureArea.x + (mGhost->mTextureArea.w - mCollider.w) / 2;
 	mCollider.y = mGhost->mTextureArea.y + (mGhost->mTextureArea.h - mCollider.h) / 2;
 
-	elapsedTicks = SDL_GetTicks() - startTicks;
-	deltaTime = elapsedTicks * 0.001f;
+	mTimer.Update();
+
 	if (mIsMoving) {
 		//moving in the positive direction: down or right
 		if (mGhost->mTextureArea.x - mTargetTileX == 0 &&
@@ -78,7 +76,7 @@ void Ghost::Move() {
 	}
 
 	if (mIsMoving)
-		mGhost->LerpTextureArea(mGameMap->mGrid->mTiles[pathToPacMan[mIt - 1]].mTile.x - 8, mGameMap->mGrid->mTiles[pathToPacMan[mIt - 1]].mTile.y - 8, mTargetTileX, mTargetTileY, deltaTime, mMoveSpeed);
+		mGhost->LerpTextureArea(mGameMap->mGrid->mTiles[pathToPacMan[mIt - 1]].mTile.x - 8, mGameMap->mGrid->mTiles[pathToPacMan[mIt - 1]].mTile.y - 8, mTargetTileX, mTargetTileY, mTimer.DeltaTime(), mMoveSpeed);
 }
 
 void Ghost::GameOver() {
@@ -100,9 +98,8 @@ void Ghost::Update() {
 			mIsMoving = true;
 			mTargetTileX = mGameMap->mGrid->mTiles[pathToPacMan[mIt]].mTile.x - 8;
 			mTargetTileY = mGameMap->mGrid->mTiles[pathToPacMan[mIt]].mTile.y - 8;
-			startTicks = SDL_GetTicks();
-			elapsedTicks = 0;
-			deltaTime = 0.0f;
+
+			mTimer.ResetTimer();
 		}
 		else
 			Move();

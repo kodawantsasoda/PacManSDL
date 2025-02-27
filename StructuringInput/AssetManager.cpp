@@ -35,7 +35,13 @@ namespace SDLCore {
 				SDL_DestroyTexture(texture.second);
 		}
 
+		for (auto font : mFonts) {
+			if (font.second != NULL)
+				TTF_CloseFont(font.second);
+		}
+
 		mInGameTextures.clear();
 		mInGameShapes.clear();
+		mFonts.clear();
 	}
 }

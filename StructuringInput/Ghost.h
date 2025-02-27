@@ -4,6 +4,7 @@
 #include "InputManager.h"
 #include "GameMap.h"
 #include "PacManPlayer.h"
+#include "Timer.h"
 
 using namespace SDLCore;
 
@@ -14,14 +15,23 @@ public:
 	Ghost(SDL_Rect moveSquare, GameMap* gameMap, std::string name, PacManPlayer* pacMan);
 	~Ghost();
 
-	SDL_Rect mMoveSquare;
-	GameMap* mGameMap;
-	PacManPlayer* mPacMan;
+	void GameOver();
+	void Move();
 
 	void Update();
 	void Render();
 
-	void Move();
+public:
+
+	Texture* mGhost;
+	std::string mGhostName;
+	SDL_Rect mCollider;
+
+	SDL_Rect mMoveSquare;
+	GameMap* mGameMap;
+	PacManPlayer* mPacMan;
+
+	//Members for Ghost path to pacman
 	std::vector<int> pathToPacMan;
 	int mNextTile;
 	int mIt;
@@ -29,26 +39,19 @@ public:
 	bool mIsMoving;
 	int mTargetTileX;
 	int mTargetTileY;
-	Texture* mGhost;
-	std::string mGhostName;
 
+	//change name to mCurrentPositionOnGrid
 	int CurrentPositionOnGrid;
 
-	SDL_Rect mCollider;
-
-	void GameOver();
-
 private:
+
+	Timer mTimer;
 
 	//Graphics* mGraphics;
 	InputManager* mInput;
 	Animator* mAnimator;
 
 	float mMoveSpeed;
-
-	int startTicks;
-	int elapsedTicks;
-	float deltaTime;
 };
 
-#endif // !PacManPlayer
+#endif

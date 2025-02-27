@@ -41,6 +41,7 @@ namespace SDLCore {
 		SDL_DestroyRenderer(mRenderer);
 		mRenderer = NULL;
 		
+		TTF_Quit();
 		SDL_Quit();
 	}
 
@@ -64,6 +65,12 @@ namespace SDLCore {
 		mRenderer = SDL_CreateRenderer(mWindow, -1, SDL_RENDERER_ACCELERATED);
 		if (mRenderer == NULL) {
 			printf("SDL has failed to create renderer: %s\n", SDL_GetError());
+			return false;
+		}
+
+		if (TTF_Init() == -1) {
+			printf("SDL has failed to initialize ttf library: %s\n", SDL_GetError());
+			return false;
 		}
 
 		SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x00, 0xFF);

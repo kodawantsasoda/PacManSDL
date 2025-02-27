@@ -1,6 +1,7 @@
 #ifndef _GRAPHICS_H
 #define _GRAPHICS_H
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include <stdio.h>
 
 namespace SDLCore {
@@ -21,7 +22,7 @@ namespace SDLCore {
 
 		//constants
 		const int SCREEN_WIDTH = 1080;
-		const int SCREEN_HEIGHT = 800;
+		const int SCREEN_HEIGHT = 750;
 		const char* WINDOW_TITLE = "PAC-MAN";
 
 		SDL_Window* mWindow;

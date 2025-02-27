@@ -7,11 +7,20 @@ namespace SDLCore{
 		mGraphics = Graphics::Instance();
 		mAsset = AssetManager::Instance();
 		
+		mFileExtension = file.substr(file.size() - 3, file.size() - 1);
+
 		//loading texture if created
 		mLocalTexture = mAsset->mInGameTextures[file];
-		if(mLocalTexture == NULL)
+		if (mLocalTexture == NULL && mFileExtension != "ttf")
 			CreateTexture(file);
 
+		mIsClipped = false;
+	}
+
+	Texture::Texture(std::string file, std::string text, int fontSize, SDL_Color color, int x, int y) : Texture(file){
+
+		CreateFont(file, text, fontSize, color);
+		PositionTextureArea(x, y);
 		mIsClipped = false;
 	}
 
@@ -25,7 +34,10 @@ namespace SDLCore{
 	void Texture::CreateTexture(std::string file) {
 		//couldnt find texture so we make one
 		//preparing surface for texture creation
-		SDL_Surface* surface = IMG_Load(file.c_str());
+		SDL_Surface* surface;
+
+		surface = IMG_Load(file.c_str());
+
 		if (surface == NULL) {
 			printf("Image failed to load with surface @ path %s Error %s\n", file.c_str(), IMG_GetError());
 			return;
@@ -37,10 +49,47 @@ namespace SDLCore{
 			return;
 		}
 
+		if (mFileExtension == "ttf") {
+
+			SDL_QueryTexture(mLocalTexture, NULL, NULL, &mTextureArea.w, &mTextureArea.h);
+
+		}
+
 		//throw away the surface
 		SDL_FreeSurface(surface);
+	}
 
-		return;
+	void Texture::CreateFont(std::string file, std::string text, int fontSize, SDL_Color color) {
+		//couldnt find font so we make one
+		//preparing surface for font-texture creation
+		SDL_Surface* surface;
+
+		if (mAsset->mFonts[file]) {
+
+			mFont = mAsset->mFonts[file];
+		}
+
+		mAsset->mFonts[file] = TTF_OpenFont(file.c_str(), fontSize);
+
+		mFont = mAsset->mFonts[file];
+
+		surface = TTF_RenderText_Solid(mFont, text.c_str(), color);
+
+		if (surface == NULL) {
+			printf("Image failed to load with surface FONT @ path %s Error %s\n", file.c_str(), IMG_GetError());
+			return;
+		}
+
+		mLocalTexture = SDL_CreateTextureFromSurface(mGraphics->mRenderer, surface);
+		if (mLocalTexture == NULL) {
+			printf("SDL failed to create texture FONT: %s", SDL_GetError());
+			return;
+		}
+
+		SDL_QueryTexture(mLocalTexture, NULL, NULL, &mTextureArea.w, &mTextureArea.h);
+
+		//throw away the surface
+		SDL_FreeSurface(surface);
 	}
 
 	void Texture::ClipLocalTexture(int x, int y, int w, int h) {
@@ -104,7 +153,7 @@ namespace SDLCore{
 	}
 
 	void Texture::Render() {
-		
+		//drawing...
 		if (mIsClipped) {
 			SDL_RenderCopy(mGraphics->mRenderer, mLocalTexture, &mImageClip, &mTextureArea);
 		}

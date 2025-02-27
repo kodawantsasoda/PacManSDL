@@ -34,9 +34,10 @@ namespace SDLCore {
 	GameManager::~GameManager() {
 
 		mInput->Release();
-		mGraphics->Release();
-		mAssets->Release();
 		mScreen->Release();
+		mAssets->Release();
+		mGraphics->Release();
+	
 
 		mInput = NULL;
 		mGraphics = NULL;
