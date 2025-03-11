@@ -16,6 +16,7 @@ public:
 	~Ghost();
 
 	void GameOver();
+	void Reset();
 	void Move();
 
 	void Update();
@@ -26,6 +27,7 @@ public:
 	Texture* mGhost;
 	std::string mGhostName;
 	SDL_Rect mCollider;
+	Collider mColliderEntity;
 
 	SDL_Rect mMoveSquare;
 	GameMap* mGameMap;
@@ -41,7 +43,7 @@ public:
 	int mTargetTileY;
 
 	//change name to mCurrentPositionOnGrid
-	int CurrentPositionOnGrid;
+	int mCurrentPositionOnGrid;
 
 private:
 

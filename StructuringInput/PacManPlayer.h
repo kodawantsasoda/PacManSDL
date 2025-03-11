@@ -16,26 +16,29 @@ public:
 	PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap);
 	~PacManPlayer();
 
-	void Update();
-	void Render();
-
 	void Move(char input);
 
 	//currently doesnt really work the way I want it...
 	int GetTileInFrontOfMouth();
 
+	void Reset();
+
 	//functions initiate pac-man's dying animation and game over state
 	bool GameOver();
 	void SetDeathFrame();
+
+	void Update();
+	void Render();
 
 
 public:
 	//members
 	//reference to the currently created gameMap
 	GameMap* mGameMap;
-
 	Texture* mPacMan;
+
 	SDL_Rect mCollider;
+	Collider mColliderEntity;
 
 	//members for moving, and identfying direction 
 	SDL_Rect mMoveSquare;
@@ -45,9 +48,10 @@ public:
 	int mTargetTileY;
 
 	const int XPOSDEATHCLIP = 487;
+	const int OFFSETTEXTURE = 8;
 	
 	//change to mCurrentPositionOnGrid
-	int CurrentPositionOnGrid;
+	int mCurrentPositionOnGrid;
 
 	//player score
 	std::vector<int> mScore;

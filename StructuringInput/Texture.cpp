@@ -55,6 +55,9 @@ namespace SDLCore{
 
 		}
 
+		//adding the created texture to asset manager
+		mAsset->mInGameTextures[file] = mLocalTexture;
+
 		//throw away the surface
 		SDL_FreeSurface(surface);
 	}

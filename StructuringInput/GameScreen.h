@@ -21,7 +21,7 @@ public:
 	void Update();
 	void Render();
 
-	void StageEntities();
+	//void StageEntities();
 	void CollisionHandler();
 
 private:
@@ -32,6 +32,7 @@ private:
 	GameMap* mGameMap;
 	UI* mUI;
 	InputManager* mInput;
+	Timer mTimer;
 
 	std::vector<Ghost*> mAllGhosts;
 	
@@ -39,10 +40,6 @@ private:
 	bool mIsDying;
 	bool mIsReady;
 	bool mIsPlaying;
-
-	int startTicks;
-	int elapsedTicks;
-	float deltaTime;
 };
 
 #endif

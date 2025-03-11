@@ -18,11 +18,8 @@ public:
 	Grid* mGrid;
 	SDL_Rect square;
 
-	//testing for bfs
-	std::vector<int> BFS();
+	//BFS for path finding
 	std::vector<int> BFS(int start, int finish);
-	//std::vector<int> BFS(int start, int finish, int mustInclude);
-	std::vector<int> PathFromBFS(std::vector<int> parentTiles);
 	std::vector<int> PathFromBFS(std::vector<int> parentTiles, int finish);
 
 private:
@@ -31,9 +28,11 @@ private:
 	Graphics* mGraphics;
 	InputManager* mInput;
 
-	bool isMouseInGrid();
-	void CalculateTileIndexFromMouse();
-	int mHoveredTile;
+	////for debugging purposes
+	//bool isMouseInGrid();
+	//void CalculateTileIndexFromMouse();
+	//int mHoveredTile;
+
 
 	void CalculateNeighbors(int* currentTile, int* up, int* right, int* down, int* left);
 	int mStartTile;

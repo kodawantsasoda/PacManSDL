@@ -29,6 +29,7 @@ namespace SDLCore {
 		mGraphics = Graphics::Instance();
 		mAssets = AssetManager::Instance();
 		mScreen = ScreenManager::Instance();
+		mTimer = Timer();
 	}
 
 	GameManager::~GameManager() {

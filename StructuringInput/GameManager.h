@@ -25,16 +25,18 @@ namespace SDLCore {
 		GameManager();
 		~GameManager();
 
+		//functions
+		void Update();
+		void LateUpdate();
+		void Render();
+
+	private:
 		//managing other managers
 		InputManager* mInput;
 		Graphics* mGraphics;
 		AssetManager* mAssets;
 		ScreenManager* mScreen;
-
-		//functions
-		void Update();
-		void LateUpdate();
-		void Render();
+		Timer mTimer;
 	};
 }
 

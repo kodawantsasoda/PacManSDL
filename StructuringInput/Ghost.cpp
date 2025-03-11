@@ -24,7 +24,7 @@ Ghost::Ghost(SDL_Rect moveSquare, GameMap* gameMap, std::string name, PacManPlay
 	mGameMap = gameMap;
 	mPacMan = pacMan;
 
-	CurrentPositionOnGrid = 99;
+	mCurrentPositionOnGrid = 99;
 
 	mMoveSpeed = 6.15;
 	
@@ -44,6 +44,8 @@ Ghost::Ghost(SDL_Rect moveSquare, GameMap* gameMap, std::string name, PacManPlay
 	mCollider.h -= 12;
 	mCollider.x = mGhost->mTextureArea.x + (mGhost->mTextureArea.w - mCollider.w) / 2;
 	mCollider.y = mGhost->mTextureArea.y + (mGhost->mTextureArea.h - mCollider.h) / 2;
+
+	mColliderEntity.SetParent(&mCollider, &mGhost->mTextureArea);
 }
 
 Ghost::~Ghost() {
@@ -60,8 +62,7 @@ Ghost::~Ghost() {
 
 void Ghost::Move() {
 
-	mCollider.x = mGhost->mTextureArea.x + (mGhost->mTextureArea.w - mCollider.w) / 2;
-	mCollider.y = mGhost->mTextureArea.y + (mGhost->mTextureArea.h - mCollider.h) / 2;
+	mColliderEntity.FollowParent();
 
 	mTimer.Update();
 
@@ -71,12 +72,14 @@ void Ghost::Move() {
 			mGhost->mTextureArea.y - mTargetTileY == 0) {
 
 			mIsMoving = false;
-			CurrentPositionOnGrid = pathToPacMan[mIt];
+			mCurrentPositionOnGrid = pathToPacMan[mIt];
 		}
 	}
 
 	if (mIsMoving)
-		mGhost->LerpTextureArea(mGameMap->mGrid->mTiles[pathToPacMan[mIt - 1]].mTile.x - 8, mGameMap->mGrid->mTiles[pathToPacMan[mIt - 1]].mTile.y - 8, mTargetTileX, mTargetTileY, mTimer.DeltaTime(), mMoveSpeed);
+		mGhost->LerpTextureArea(mGameMap->mGrid->mTiles[pathToPacMan[mIt - 1]].mTile.x - mPacMan->OFFSETTEXTURE, 
+								mGameMap->mGrid->mTiles[pathToPacMan[mIt - 1]].mTile.y - mPacMan->OFFSETTEXTURE, 
+								mTargetTileX, mTargetTileY, mTimer.DeltaTime(), mMoveSpeed);
 }
 
 void Ghost::GameOver() {
@@ -84,20 +87,39 @@ void Ghost::GameOver() {
 	mAnimator->Animate();
 }
 
+void Ghost::Reset() {
+
+	if (mGhostName == "Blinky") {
+
+		pathToPacMan = (mGameMap->BFS(321, mPacManTile));
+		mGhost->PositionTextureArea(mGameMap->mGrid->mTiles[321].mTile.x, mGameMap->mGrid->mTiles[321].mTile.y);
+		mCurrentPositionOnGrid = 321;
+	}
+	else if (mGhostName == "Pinky") {
+
+		pathToPacMan = (mGameMap->BFS(375, mPacManTile));
+		mGhost->PositionTextureArea(mGameMap->mGrid->mTiles[375].mTile.x, mGameMap->mGrid->mTiles[375].mTile.y);
+		mCurrentPositionOnGrid = 375;
+	}
+
+	mIt = 0;
+	mIsMoving = false;
+}
+
 void Ghost::Update() {
 
 	mAnimator->Animate();
 
-	mPacManTile = mPacMan->CurrentPositionOnGrid;
+	mPacManTile = mPacMan->mCurrentPositionOnGrid;
 
-	if (CurrentPositionOnGrid != pathToPacMan[pathToPacMan.size() - 1]) {
+	if (mCurrentPositionOnGrid != pathToPacMan[pathToPacMan.size() - 1]) {
 
 		if (mIsMoving == false) {
 
 			mIt++;
 			mIsMoving = true;
-			mTargetTileX = mGameMap->mGrid->mTiles[pathToPacMan[mIt]].mTile.x - 8;
-			mTargetTileY = mGameMap->mGrid->mTiles[pathToPacMan[mIt]].mTile.y - 8;
+			mTargetTileX = mGameMap->mGrid->mTiles[pathToPacMan[mIt]].mTile.x - mPacMan->OFFSETTEXTURE;
+			mTargetTileY = mGameMap->mGrid->mTiles[pathToPacMan[mIt]].mTile.y - mPacMan->OFFSETTEXTURE;
 
 			mTimer.ResetTimer();
 		}
@@ -111,14 +133,14 @@ void Ghost::Update() {
 		mIt = 0;
 
 		if(mGhostName == "Blinky")
-			pathToPacMan = mGameMap->BFS(CurrentPositionOnGrid, finalTile);
+			pathToPacMan = mGameMap->BFS(mCurrentPositionOnGrid, finalTile);
 		else {
 			if (!mGameMap->mGrid->mTiles[mPacMan->GetTileInFrontOfMouth()].mIsWall) {
 
-				pathToPacMan = mGameMap->BFS(CurrentPositionOnGrid, mPacMan->GetTileInFrontOfMouth());
+				pathToPacMan = mGameMap->BFS(mCurrentPositionOnGrid, mPacMan->GetTileInFrontOfMouth());
 			}
 			else
-				pathToPacMan = mGameMap->BFS(CurrentPositionOnGrid, finalTile);
+				pathToPacMan = mGameMap->BFS(mCurrentPositionOnGrid, finalTile);
 		}
 	}
 }
@@ -127,5 +149,5 @@ void Ghost::Update() {
 void Ghost::Render() {
 
 	mGhost->Render();
-	Graphics::Instance()->FillRectInGrid(mCollider, 255, 0, 0, 50);
+	//Graphics::Instance()->FillRectInGrid(mCollider, 255, 0, 0, 50);
 }

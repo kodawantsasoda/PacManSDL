@@ -6,9 +6,7 @@ namespace SDLCore {
 
 		Init(isSpriteSheet, referenceTexture, numberOfSprites, startFrame, speed);
 
-		startTicks = SDL_GetTicks();
-		elapsedTicks = 0;
-		deltaTime = 0.0f;
+		mTimer = Timer();
 	}
 
 	Animator::~Animator() {
@@ -25,40 +23,32 @@ namespace SDLCore {
 		startFrame = mCurrentFrame;
 		mAnimationSpeed = speed;
 
-		x = mText->mImageClip.x;
-		y = mText->mImageClip.y;
+		mX = mText->mImageClip.x;
+		mY = mText->mImageClip.y;
 
 		mAnimationCycleComplete = false;
 	}
 
-	void Animator::ResetTimer() {
-
-		startTicks = SDL_GetTicks();
-		elapsedTicks = 0;
-		deltaTime = 0.0f;
-	}
-
 	void Animator::Animate() {
 
-		elapsedTicks = SDL_GetTicks() - startTicks;
-		deltaTime = elapsedTicks * 0.001f;
+		mTimer.Update();
 
 		if (isSpriteSheet) {
 
-			if (deltaTime > mAnimationSpeed) {
+			if (mTimer.DeltaTime() > mAnimationSpeed) {
 
-				ResetTimer();
+				mTimer.ResetTimer();
 
 				mCurrentFrame++;
 
 				if (mCurrentFrame > numberOfSprites) {
 
 					mCurrentFrame = 0;
-					mText->mImageClip.x = x;
+					mText->mImageClip.x = mX;
 				}
 				
 				else
-					mText->mImageClip.x = x + (mText->mImageClip.w * mCurrentFrame);
+					mText->mImageClip.x = mX + (mText->mImageClip.w * mCurrentFrame);
 
 				if (mCurrentFrame == mStartFrame) {
 
@@ -68,5 +58,4 @@ namespace SDLCore {
 			}
 		}
 	}
-
 }

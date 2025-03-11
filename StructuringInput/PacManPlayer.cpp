@@ -8,7 +8,7 @@ PacManPlayer::PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap) {
 
 	mPacMan = new Texture("PMSpriteSheet.png");
 	mPacMan->ClipLocalTexture(455, 0, 16, 16);
-	mPacMan->PositionTextureArea(mGameMap->mGrid->mTiles[657].mTile.x - 8, mGameMap->mGrid->mTiles[657].mTile.y - 8);
+	mPacMan->PositionTextureArea(mGameMap->mGrid->mTiles[657].mTile.x - OFFSETTEXTURE, mGameMap->mGrid->mTiles[657].mTile.y - OFFSETTEXTURE);
 	mPacMan->ScaleTextureArea(3, 8, 8);
 
 	mTimer = Timer();
@@ -19,11 +19,13 @@ PacManPlayer::PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap) {
 	mCollider.x = mPacMan->mTextureArea.x + (mPacMan->mTextureArea.w - mCollider.w) / 2;
 	mCollider.y = mPacMan->mTextureArea.y + (mPacMan->mTextureArea.h - mCollider.h) / 2;
 
+	mColliderEntity.SetParent(&mCollider, &mPacMan->mTextureArea);
+
 	mAnimator = new Animator(true, mPacMan, 2, 2, 0.05);
 	mDeathAnimator = new Animator(true, mPacMan, 11, 0, 0.15);
 
-	CurrentPositionOnGrid = 657;
-	mScore.push_back(CurrentPositionOnGrid);
+	mCurrentPositionOnGrid = 657;
+	mScore.push_back(mCurrentPositionOnGrid);
 
 	mIsMoving = false;
 	mCurrentInput = '0';
@@ -53,16 +55,16 @@ int PacManPlayer::GetTileInFrontOfMouth() {
 	switch (mCurrentInput) {
 
 	case 'W':
-		return CurrentPositionOnGrid - mGameMap->mGrid->GetColumns();
+		return mCurrentPositionOnGrid - mGameMap->mGrid->GetColumns();
 		break;
 	case 'A':
-		return CurrentPositionOnGrid - 1;
+		return mCurrentPositionOnGrid - 1;
 		break;
 	case 'S':
-		return CurrentPositionOnGrid + mGameMap->mGrid->GetColumns();
+		return mCurrentPositionOnGrid + mGameMap->mGrid->GetColumns();
 		break;
 	case 'D':
-		return CurrentPositionOnGrid + 1;
+		return mCurrentPositionOnGrid + 1;
 		break;
 	default:
 		return -1;
@@ -73,8 +75,10 @@ void PacManPlayer::Move(char input) {
 
 	mAnimator->Animate();
 
-	mCollider.x = mPacMan->mTextureArea.x + (mPacMan->mTextureArea.w - mCollider.w) / 2;
-	mCollider.y = mPacMan->mTextureArea.y + (mPacMan->mTextureArea.h - mCollider.h) / 2;
+	/*mCollider.x = mPacMan->mTextureArea.x + (mPacMan->mTextureArea.w - mCollider.w) / 2;
+	mCollider.y = mPacMan->mTextureArea.y + (mPacMan->mTextureArea.h - mCollider.h) / 2;*/
+
+	mColliderEntity.FollowParent();
 
 	mTimer.Update();
 
@@ -86,25 +90,34 @@ void PacManPlayer::Move(char input) {
 		switch (input) {
 
 		case 'W':
-			CurrentPositionOnGrid -= mGameMap->mGrid->GetColumns();
+			mCurrentPositionOnGrid -= mGameMap->mGrid->GetColumns();
 			break;
 		case 'A':
-			CurrentPositionOnGrid--;
+			mCurrentPositionOnGrid--;
 			break;
 		case 'S':
-			CurrentPositionOnGrid += mGameMap->mGrid->GetColumns();
+			mCurrentPositionOnGrid += mGameMap->mGrid->GetColumns();
 			break;
 		case 'D':
-			CurrentPositionOnGrid++;
+			mCurrentPositionOnGrid++;
 			break;
 		}
 	}
 
 	if (!mIsMoving) 
-		mScore.push_back(CurrentPositionOnGrid);
+		mScore.push_back(mCurrentPositionOnGrid);
 
 	else
-		mPacMan->LerpTextureArea(mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.x - 8, mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.y - 8, mTargetTileX, mTargetTileY, mTimer.DeltaTime(), mMoveSpeed);
+		mPacMan->LerpTextureArea(mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mTile.x - OFFSETTEXTURE, 
+								mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mTile.y - OFFSETTEXTURE, 
+								mTargetTileX, mTargetTileY, mTimer.DeltaTime(), mMoveSpeed);
+}
+
+void PacManPlayer::Reset() {
+
+	mIsMoving = false;
+	mCurrentPositionOnGrid = 657;
+	mPacMan->PositionTextureArea(mGameMap->mGrid->mTiles[657].mTile.x, mGameMap->mGrid->mTiles[657].mTile.y - OFFSETTEXTURE);
 }
 
 bool PacManPlayer::GameOver() {
@@ -136,25 +149,25 @@ void PacManPlayer::Update() {
 		//determining the players next move based on input
 		if (mInput->IsKeyPressed(SDL_SCANCODE_W) || mInput->IsKeyHeld(SDL_SCANCODE_W)) {
 
-			nextTile = CurrentPositionOnGrid - mGameMap->mGrid->GetColumns();
+			nextTile = mCurrentPositionOnGrid - mGameMap->mGrid->GetColumns();
 			mCurrentInput = 'W';
 		}
 
 		else if (mInput->IsKeyPressed(SDL_SCANCODE_A) || mInput->IsKeyHeld(SDL_SCANCODE_A)) {
 
-			nextTile = CurrentPositionOnGrid - 1;
+			nextTile = mCurrentPositionOnGrid - 1;
 			mCurrentInput = 'A';
 		}
 
 		else if (mInput->IsKeyPressed(SDL_SCANCODE_S) || mInput->IsKeyHeld(SDL_SCANCODE_S)) {
 
-			nextTile = CurrentPositionOnGrid + mGameMap->mGrid->GetColumns();
+			nextTile = mCurrentPositionOnGrid + mGameMap->mGrid->GetColumns();
 			mCurrentInput = 'S';
 		}
 
 		else if (mInput->IsKeyPressed(SDL_SCANCODE_D) || mInput->IsKeyHeld(SDL_SCANCODE_D)) {
 
-			nextTile = CurrentPositionOnGrid + 1;
+			nextTile = mCurrentPositionOnGrid + 1;
 			mCurrentInput = 'D';
 		}
 	}
@@ -167,20 +180,20 @@ void PacManPlayer::Update() {
 		switch (mCurrentInput) {
 
 		case 'W':
-			mTargetTileX = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.x - 8;
-			mTargetTileY = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.y - mMoveSquare.h - 8;
+			mTargetTileX = mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mTile.x - OFFSETTEXTURE;
+			mTargetTileY = mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mTile.y - mMoveSquare.h - OFFSETTEXTURE;
 			break;
 		case 'A':
-			mTargetTileX = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.x - mMoveSquare.w - 8;
-			mTargetTileY = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.y - 8;
+			mTargetTileX = mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mTile.x - mMoveSquare.w - OFFSETTEXTURE;
+			mTargetTileY = mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mTile.y - OFFSETTEXTURE;
 			break;
 		case 'S':
-			mTargetTileX = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.x - 8;
-			mTargetTileY = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.y + mMoveSquare.h - 8;
+			mTargetTileX = mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mTile.x - OFFSETTEXTURE;
+			mTargetTileY = mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mTile.y + mMoveSquare.h - OFFSETTEXTURE;
 			break;
 		case 'D':
-			mTargetTileX = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.x + mMoveSquare.w - 8;
-			mTargetTileY = mGameMap->mGrid->mTiles[CurrentPositionOnGrid].mTile.y - 8;
+			mTargetTileX = mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mTile.x + mMoveSquare.w - OFFSETTEXTURE;
+			mTargetTileY = mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mTile.y - OFFSETTEXTURE;
 			break;
 		}
 
@@ -188,7 +201,7 @@ void PacManPlayer::Update() {
 	}
 
 	if (mInput->IsKeyPressed(SDL_SCANCODE_SPACE))
-		printf("%d\n", CurrentPositionOnGrid);
+		printf("%d\n", mCurrentPositionOnGrid);
 }
 //
 void PacManPlayer::Render() {
@@ -201,8 +214,8 @@ void PacManPlayer::Render() {
 	
 	mPacMan->Render();
 
-	/*COLLIDER DEBUGGING
+	//COLLIDER DEBUGGING
 	Graphics::Instance()->FillRectInGrid(mCollider, 255, 0, 0, 50);
 	Graphics::Instance()->FillRectInGrid(mCollider, 255, 0, 0, 50);
-	*/
+	
 }

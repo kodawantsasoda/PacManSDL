@@ -1,6 +1,7 @@
 #ifndef ANIMATOR_H
 #define ANIMATOR_H
 #include "Texture.h"
+#include "Timer.h"
 
 namespace SDLCore {
 
@@ -13,22 +14,20 @@ namespace SDLCore {
 
 		void Init(bool isSpriteSheet, Texture* referenceTexture, int numberOfSprites, int startFrame, float speed);
 
+	public:
 		bool mAnimationCycleComplete;
 
 
 	private:
 		Texture* mText;
+		Timer mTimer;
+
 		bool isSpriteSheet;
-		
 		int numberOfSprites;
-		int x, y;
-		void ResetTimer();
-		int startTicks;
-		int elapsedTicks;
-		float deltaTime;
 		int mCurrentFrame;
 		int mStartFrame;
 		float mAnimationSpeed;
+		int mX, mY;
 
 	};
 }
