@@ -22,6 +22,7 @@ namespace SDLCore {
 		void CreateTexture(std::string file);
 
 		void CreateFont(std::string file, std::string text, int fontSize, SDL_Color color);
+		void UpdateTextFont(std::string text, SDL_Color color);
 
 		//After texture has been created/loaded, we can scale it
 		void ClipLocalTexture(int x, int y, int w, int h);

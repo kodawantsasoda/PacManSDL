@@ -53,6 +53,8 @@ public:
 	//change to mCurrentPositionOnGrid
 	int mCurrentPositionOnGrid;
 
+	bool mIsPoweredUp;
+
 	//player score
 	std::vector<int> mScore;
 
@@ -62,6 +64,7 @@ private:
 	Animator* mAnimator;
 	Animator* mDeathAnimator;
 	Timer mTimer;
+	Timer mPowerUpTimer;
 
 	float mMoveSpeed;
 };

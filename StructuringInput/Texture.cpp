@@ -43,6 +43,7 @@ namespace SDLCore{
 			return;
 		}
 
+		SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 0, 0, 0));
 		mLocalTexture = SDL_CreateTextureFromSurface(mGraphics->mRenderer, surface);
 		if (mLocalTexture == NULL) {
 			printf("SDL failed to create texture: %s", SDL_GetError());
@@ -84,6 +85,24 @@ namespace SDLCore{
 		}
 
 		mLocalTexture = SDL_CreateTextureFromSurface(mGraphics->mRenderer, surface);
+		if (mLocalTexture == NULL) {
+			printf("SDL failed to create texture FONT: %s", SDL_GetError());
+			return;
+		}
+
+		SDL_QueryTexture(mLocalTexture, NULL, NULL, &mTextureArea.w, &mTextureArea.h);
+
+		//throw away the surface
+		SDL_FreeSurface(surface);
+	}
+
+	void Texture::UpdateTextFont(std::string text, SDL_Color color) {
+
+		SDL_Surface* surface;
+		surface = TTF_RenderText_Solid(mFont, text.c_str(), color);
+
+		mLocalTexture = SDL_CreateTextureFromSurface(mGraphics->mRenderer, surface);
+		
 		if (mLocalTexture == NULL) {
 			printf("SDL failed to create texture FONT: %s", SDL_GetError());
 			return;

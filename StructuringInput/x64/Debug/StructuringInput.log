@@ -1,21 +1,2 @@
-﻿  GameManager.cpp
-  GameScreen.cpp
-  Ghost.cpp
-  PacManPlayer.cpp
-E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(17,47): warning C4305: 'argument': truncation from 'double' to 'float'
-E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(29,15): warning C4305: '=': truncation from 'double' to 'float'
-E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(82,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(82,9): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(81,64): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(80,82): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(24,48): warning C4305: 'argument': truncation from 'double' to 'float'
-E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(25,54): warning C4305: 'argument': truncation from 'double' to 'float'
-E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(113,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(113,9): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(112,65): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(111,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-E:\C++\SDL\StructuringInput\StructuringInput\PacManPlayer.cpp(137,45): warning C4305: 'argument': truncation from 'double' to 'float'
-  ScreenManager.cpp
-  main.cpp
-  Generating Code...
+﻿  GameScreen.cpp
   StructuringInput.vcxproj -> E:\C++\SDL\StructuringInput\x64\Debug\StructuringInput.exe

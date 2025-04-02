@@ -12,6 +12,7 @@ PacManPlayer::PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap) {
 	mPacMan->ScaleTextureArea(3, 8, 8);
 
 	mTimer = Timer();
+	mPowerUpTimer = Timer();
 
 	mCollider = mPacMan->mTextureArea;
 	mCollider.w -= 12;
@@ -30,7 +31,9 @@ PacManPlayer::PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap) {
 	mIsMoving = false;
 	mCurrentInput = '0';
 
-	mMoveSpeed = 7.5;
+	mMoveSpeed = 7.0;
+
+	mIsPoweredUp = false;
 }
 
 PacManPlayer::~PacManPlayer() {
@@ -104,8 +107,11 @@ void PacManPlayer::Move(char input) {
 		}
 	}
 
-	if (!mIsMoving) 
+	if (!mIsMoving && !mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mHasVisited) {
+
 		mScore.push_back(mCurrentPositionOnGrid);
+		mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mHasVisited = true;
+	}
 
 	else
 		mPacMan->LerpTextureArea(mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mTile.x - OFFSETTEXTURE, 
@@ -200,6 +206,12 @@ void PacManPlayer::Update() {
 		mTimer.ResetTimer();
 	}
 
+	if (mCurrentPositionOnGrid == 670) {
+
+		mIsPoweredUp = true;
+		printf("POWER-UP\n");
+	}
+
 	if (mInput->IsKeyPressed(SDL_SCANCODE_SPACE))
 		printf("%d\n", mCurrentPositionOnGrid);
 }
@@ -215,7 +227,5 @@ void PacManPlayer::Render() {
 	mPacMan->Render();
 
 	//COLLIDER DEBUGGING
-	Graphics::Instance()->FillRectInGrid(mCollider, 255, 0, 0, 50);
-	Graphics::Instance()->FillRectInGrid(mCollider, 255, 0, 0, 50);
-	
+	//Graphics::Instance()->FillRectInGrid(mCollider, 255, 0, 0, 50);
 }

@@ -6,13 +6,18 @@ GameScreen::GameScreen() {
 	mPacMan = new PacManPlayer(mGameMap->square, mGameMap);
 	mBlinky = new Ghost(mGameMap->square, mGameMap, "Blinky", mPacMan);
 	mPinky = new Ghost(mGameMap->square, mGameMap, "Pinky", mPacMan);
+	mInky = new Ghost(mGameMap->square, mGameMap, "Inky", mPacMan);
+	mClyde = new Ghost(mGameMap->square, mGameMap, "Clyde", mPacMan);
 	mInput = InputManager::Instance();
 	mUI = new UI(mGameMap);
 
 	mAllGhosts.push_back(mBlinky);
 	mAllGhosts.push_back(mPinky);
+	mAllGhosts.push_back(mInky);
+	mAllGhosts.push_back(mClyde);
 
 	mIsHit = false;
+	mHasAte = true;
 	mIsDying = false;
 	mIsReady = false;
 	mIsPlaying = true;
@@ -34,6 +39,12 @@ GameScreen::~GameScreen() {
 	delete mPinky;
 	mPinky = NULL;
 
+	delete mInky;
+	mInky = NULL;
+
+	delete mClyde;
+	mClyde = NULL;
+
 	mInput = NULL;
 
 	delete mUI;
@@ -44,11 +55,24 @@ void GameScreen::CollisionHandler() {
 	
 	for (auto ghost : mAllGhosts) {
 
-		if (HasCollided(&mPacMan->mCollider, &ghost->mCollider)) {
+		if (!mPacMan->mIsPoweredUp || !ghost->mIsEatable) {
 
-			printf("Collided with: %s\n", ghost->mGhostName.c_str());
-			mIsHit = true;
+			if (HasCollided(&mPacMan->mCollider, &ghost->mCollider)) {
+
+				printf("Collided with: %s\n", ghost->mGhostName.c_str());
+				mIsHit = true;
+			}
 		}
+		else if(ghost->mIsEatable && !ghost->mIsDead){
+			if (HasCollided(&mPacMan->mCollider, &ghost->mCollider)) {
+
+				printf("Pac-Man ate: %s\n", ghost->mGhostName.c_str());
+				ghost->mIsDead = true;
+				printf("%d", ghost->mReturnedHome);
+			}
+		}
+		
+
 	}
 }
 
@@ -57,16 +81,31 @@ void GameScreen::Update() {
 	if (!mIsHit) {
 
 		if (mIsPlaying) {
+
+			CollisionHandler();
+
 			mPacMan->Update();
 
 			mBlinky->Update();
 			mPinky->Update();
+			mInky->Update();
+			mClyde->Update();
 
 			mGameMap->Update();
 
-			CollisionHandler();
-
 			mTimer.ResetTimer();
+
+			if (mPacMan->mIsPoweredUp) {
+
+				if (mAllGhosts[0]->mEatableTimer.DeltaTime() >= 10) {
+
+					if (!mAllGhosts[0]->mIsEatable) {
+
+						mPacMan->mIsPoweredUp = false;
+						
+					}
+				}
+			}
 		}
 	}
 
@@ -75,6 +114,8 @@ void GameScreen::Update() {
 		mIsPlaying = false;
 		mBlinky->GameOver();
 		mPinky->GameOver();
+		mInky->GameOver();
+		mClyde->GameOver();
 
 		//enemy collider follow here
 		mPacMan->mColliderEntity.FollowParent();
@@ -104,6 +145,8 @@ void GameScreen::Update() {
 
 		mBlinky->Reset();
 		mPinky->Reset();
+		mInky->Reset();
+		mClyde->Reset();
 		//enemy collider reset here
 
 		mPacMan->Reset();
@@ -126,7 +169,17 @@ void GameScreen::Update() {
 		}
 	}
 
+	//mUI->mScore 
 	mUI->Update();
+	
+	std::string currentScore = std::to_string((mPacMan->mScore.size() - 1) * 10);
+	SDL_Color color;
+	color.r = 255;
+	color.g = 255;
+	color.b = 255;
+	color.a = 255;
+
+	mUI->mScore->UpdateTextFont(currentScore, color);
 }
 
 void GameScreen::Render() {
@@ -138,6 +191,8 @@ void GameScreen::Render() {
 
 		mPinky->Render();
 		mBlinky->Render();
+		mInky->Render();
+		mClyde->Render();
 	}
 
 	mUI->Render();

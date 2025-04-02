@@ -29,6 +29,8 @@ private:
 	PacManPlayer* mPacMan;
 	Ghost* mBlinky;
 	Ghost* mPinky;
+	Ghost* mInky;
+	Ghost* mClyde;
 	GameMap* mGameMap;
 	UI* mUI;
 	InputManager* mInput;
@@ -37,6 +39,7 @@ private:
 	std::vector<Ghost*> mAllGhosts;
 	
 	bool mIsHit;
+	bool mHasAte;
 	bool mIsDying;
 	bool mIsReady;
 	bool mIsPlaying;
