@@ -2,34 +2,42 @@
 
 UI::UI(GameMap* gameMap) {
 
-	SDL_Color color;
-	color.r = 255;
-	color.g = 255;
-	color.b = 255;
-	color.a = 255;
+	mFontColor.r = 255;
+	mFontColor.g = 255;
+	mFontColor.b = 255;
+	mFontColor.a = 255;
 
 	std::string text = "1UP";
-	m1Up = new Texture("Emulogic.ttf", text, 20, color, (Graphics::Instance()->SCREEN_WIDTH / 3) - (text.size() / 2) * 20, 0);
+	m1Up = new Texture("Emulogic.ttf", text, 20, mFontColor, (Graphics::Instance()->SCREEN_WIDTH / 3) - (text.size() / 2) * 20, 0);
 	text = "High Score";
-	mHighScore = new Texture("Emulogic.ttf", text, 20, color, (Graphics::Instance()->SCREEN_WIDTH / 2) - (text.size() / 2) * 20, 0);
+	mHighScore = new Texture("Emulogic.ttf", text, 20, mFontColor, (Graphics::Instance()->SCREEN_WIDTH / 2) - (text.size() / 2) * 20, 0);
 	text = "0000000";
-	mScore = new Texture("Emulogic.ttf", text, 20, color, (Graphics::Instance()->SCREEN_WIDTH / 3) - (text.size() / 2) * 20, 20);
+	mScore = new Texture("Emulogic.ttf", text, 20, mFontColor, (Graphics::Instance()->SCREEN_WIDTH / 3) - (text.size() / 2) * 20, 20);
 	text = "0000000";
-	mHighScoreNumber = new Texture("Emulogic.ttf", text, 20, color, (Graphics::Instance()->SCREEN_WIDTH / 2) - (text.size() / 2) * 20, 20);
+	mHighScoreNumber = new Texture("Emulogic.ttf", text, 20, mFontColor, (Graphics::Instance()->SCREEN_WIDTH / 2) - (text.size() / 2) * 20, 20);
+	text = "Round 1";
+	mRound = new Texture("Emulogic.ttf", text, 20, mFontColor, (Graphics::Instance()->SCREEN_WIDTH / 2) - (text.size() / 2) * 20, 
+																	gameMap->mMapTexture->mTextureArea.y + gameMap->mMapTexture->mTextureArea.h);
 
 	text = "Player One";
-	color.r = 0;
-	color.g = 255;
-	color.b = 255;
-	color.a = 255;
-	mPlayerOne = new Texture("Emulogic.ttf", text, 20, color, gameMap->mGrid->mTiles[317].mTile.x - 5, gameMap->mGrid->mTiles[317].mTile.y);
+	mFontColor.r = 0;
+	mFontColor.g = 255;
+	mFontColor.b = 255;
+	mFontColor.a = 255;
+	mPlayerOne = new Texture("Emulogic.ttf", text, 20, mFontColor, gameMap->mGrid->mTiles[317].mTile.x - 5, gameMap->mGrid->mTiles[317].mTile.y);
 
 	text = "Ready!";
-	color.r = 255;
-	color.g = 255;
-	color.b = 0;
-	color.a = 255;
-	mReady = new Texture("Emulogic.ttf", text, 20, color, gameMap->mGrid->mTiles[487].mTile.x, gameMap->mGrid->mTiles[487].mTile.y - 5);
+	mFontColor.r = 255;
+	mFontColor.g = 255;
+	mFontColor.b = 0;
+	mFontColor.a = 255;
+	mReady = new Texture("Emulogic.ttf", text, 20, mFontColor, gameMap->mGrid->mTiles[487].mTile.x, gameMap->mGrid->mTiles[487].mTile.y - 5);
+
+	//reset back to white
+	mFontColor.r = 255;
+	mFontColor.g = 255;
+	mFontColor.b = 255;
+	mFontColor.a = 255;
 
 	startTicks = SDL_GetTicks();
 	elapsedTicks = 0;
@@ -78,4 +86,6 @@ void UI::Render() {
 		mPlayerOne->Render();
 	if(mIsRevealReady)
 		mReady->Render();
+
+	mRound->Render();
 }

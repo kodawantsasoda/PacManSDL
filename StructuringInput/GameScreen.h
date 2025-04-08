@@ -43,6 +43,11 @@ private:
 	bool mIsDying;
 	bool mIsReady;
 	bool mIsPlaying;
+	bool mIsNextLevel;
+	bool mMapAnimation;
+
+	int* mRoundScore;
+	int mRoundNum;
 };
 
 #endif

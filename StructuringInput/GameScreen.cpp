@@ -21,8 +21,13 @@ GameScreen::GameScreen() {
 	mIsDying = false;
 	mIsReady = false;
 	mIsPlaying = true;
+	mIsNextLevel = false;
+	mMapAnimation = false;
 
 	mTimer = Timer();
+
+	mRoundScore = &mPacMan->mScore[0];
+	mRoundNum = 1;
 }
 
 GameScreen::~GameScreen() {
@@ -71,12 +76,12 @@ void GameScreen::CollisionHandler() {
 				printf("%d", ghost->mReturnedHome);
 			}
 		}
-		
-
 	}
 }
 
 void GameScreen::Update() {
+
+	mGameMap->Update();
 
 	if (!mIsHit) {
 
@@ -93,6 +98,17 @@ void GameScreen::Update() {
 
 			mGameMap->Update();
 
+			//reinitializing round score 245
+			if (mRoundScore == NULL && mPacMan->mScore.size() % 2 != 0) 
+				mRoundScore = &mPacMan->mScore[0];
+
+			//checking if player completed level
+			if (mRoundScore != NULL && mPacMan->mScore.size() % 2 == 0 && mIsPlaying) {
+
+				mIsNextLevel = true;
+				mRoundScore = 0;
+			}
+
 			mTimer.ResetTimer();
 
 			if (mPacMan->mIsPoweredUp) {
@@ -102,7 +118,6 @@ void GameScreen::Update() {
 					if (!mAllGhosts[0]->mIsEatable) {
 
 						mPacMan->mIsPoweredUp = false;
-						
 					}
 				}
 			}
@@ -123,8 +138,49 @@ void GameScreen::Update() {
 		mTimer.Update();
 
 		if (mTimer.DeltaTime() > 1.5f) {
+
 			mIsDying = true;
 			mPacMan->SetDeathFrame();
+		}
+	}
+
+	if (mIsNextLevel) {
+		//printf("papa\n");
+		//initiate animation stuff
+		//reset positions
+		//reset score
+		//reset orbs
+		mIsPlaying = false;
+
+		mBlinky->GameOver();
+		mPinky->GameOver();
+		mInky->GameOver();
+		mClyde->GameOver();
+
+		mTimer.Update();
+
+		if (mTimer.DeltaTime() > 1.0f) {
+
+			mIsReady = true;
+			mIsHit = true;
+			mIsNextLevel = false;
+
+			mRoundNum++;
+			std::string roundUpdate = "Round " + std::to_string(mRoundNum);
+			mUI->mRound->UpdateTextFont(roundUpdate, mUI->mFontColor);
+
+			for (auto tile : mGameMap->mGrid->mTiles) {
+
+				if (tile.mHasVisited) {
+					printf("rrr\n");
+					tile.mHasVisited = false;
+					
+				}
+			}
+
+			mGameMap->mGrid->SetNonOrbs();
+
+			mTimer.ResetTimer();
 		}
 	}
 
@@ -139,7 +195,14 @@ void GameScreen::Update() {
 		}
 	}
 
+	if (mMapAnimation) {
+
+
+	}
+
 	if (mIsReady) {
+
+		//printf("Ready?\n");
 
 		mTimer.Update();
 
@@ -166,6 +229,8 @@ void GameScreen::Update() {
 			
 			mIsReady = false;
 			mIsPlaying = true;
+
+			mRoundScore = NULL;
 		}
 	}
 
@@ -173,13 +238,9 @@ void GameScreen::Update() {
 	mUI->Update();
 	
 	std::string currentScore = std::to_string((mPacMan->mScore.size() - 1) * 10);
-	SDL_Color color;
-	color.r = 255;
-	color.g = 255;
-	color.b = 255;
-	color.a = 255;
 
-	mUI->mScore->UpdateTextFont(currentScore, color);
+	if (mPacMan->mScore.size() != 0)
+		mUI->mScore->UpdateTextFont(currentScore, mUI->mFontColor);
 }
 
 void GameScreen::Render() {

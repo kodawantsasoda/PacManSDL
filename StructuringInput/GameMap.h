@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "Grid.h"
 #include "InputManager.h"
+#include "Animator.h"
 #include <queue>
 
 using namespace SDLCore;
@@ -16,6 +17,8 @@ public:
 	void Update();
 
 	Grid* mGrid;
+	Animator* mAnimator;
+	Texture* mMapTexture;
 	SDL_Rect square;
 
 	//BFS for path finding
@@ -24,7 +27,6 @@ public:
 
 private:
 
-	Texture* mMapTexture;
 	Graphics* mGraphics;
 	InputManager* mInput;
 

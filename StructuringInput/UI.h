@@ -19,9 +19,12 @@ public:
 	Texture* mHighScoreNumber;
 	Texture* mPlayerOne;
 	Texture* mReady;
+	Texture* mRound;
 
 	bool mIsRevealPlayerOne;
 	bool mIsRevealReady;
+
+	SDL_Color mFontColor;
 
 private:
 	void ResetTimer();

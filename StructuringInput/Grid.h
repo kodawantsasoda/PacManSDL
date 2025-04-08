@@ -21,6 +21,9 @@ namespace SDLCore {
 		int GetScaleFactor();
 		void FitTextureOnGrid(SDL_Rect referenceRect, int scaleFactor, SDL_Rect* textRect);
 
+		void SetNonOrbs();
+		void ResetOrbState(Tiles Tile);
+
 	private:
 
 		bool IsWallPos(int i);

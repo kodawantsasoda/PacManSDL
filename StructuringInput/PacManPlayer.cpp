@@ -31,7 +31,7 @@ PacManPlayer::PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap) {
 	mIsMoving = false;
 	mCurrentInput = '0';
 
-	mMoveSpeed = 7.0;
+	mMoveSpeed = 10.0;
 
 	mIsPoweredUp = false;
 }

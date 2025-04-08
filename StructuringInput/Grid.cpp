@@ -26,6 +26,8 @@ namespace SDLCore {
 			tile.y += tile.h;
 			tiles.mTile = tile;
 		}
+
+        SetNonOrbs();
 	}
 
 	Grid::~Grid() {
@@ -89,6 +91,74 @@ namespace SDLCore {
 
         return true;
 	}
+
+    //this is to set non orb tiles that are walkable, but do not offer any scoring
+    void Grid::SetNonOrbs() {
+
+        //56 tiles total that are non orbs
+        //we set tile as visited so when the scoring logic checks if the space has been visited, it already has been visited so we don't add score
+        mTiles[264].mHasVisited = true;
+        mTiles[267].mHasVisited = true;
+        mTiles[292].mHasVisited = true;
+        mTiles[295].mHasVisited = true;
+        mTiles[317].mHasVisited = true;
+        mTiles[318].mHasVisited = true;
+        mTiles[319].mHasVisited = true;
+        mTiles[320].mHasVisited = true;
+        mTiles[321].mHasVisited = true;
+        mTiles[322].mHasVisited = true;
+        mTiles[323].mHasVisited = true;
+        mTiles[324].mHasVisited = true;
+        mTiles[325].mHasVisited = true;
+        mTiles[326].mHasVisited = true;
+        mTiles[345].mHasVisited = true;
+        mTiles[354].mHasVisited = true;
+        mTiles[373].mHasVisited = true;
+        mTiles[382].mHasVisited = true;
+        mTiles[392].mHasVisited = true;
+        mTiles[393].mHasVisited = true;
+        mTiles[394].mHasVisited = true;
+        mTiles[395].mHasVisited = true;
+        mTiles[396].mHasVisited = true;
+        mTiles[397].mHasVisited = true;
+        mTiles[399].mHasVisited = true;
+        mTiles[400].mHasVisited = true;
+        mTiles[401].mHasVisited = true;
+        mTiles[410].mHasVisited = true;
+        mTiles[411].mHasVisited = true;
+        mTiles[412].mHasVisited = true;
+        mTiles[414].mHasVisited = true;
+        mTiles[415].mHasVisited = true;
+        mTiles[416].mHasVisited = true;
+        mTiles[417].mHasVisited = true;
+        mTiles[418].mHasVisited = true;
+        mTiles[419].mHasVisited = true;
+        mTiles[429].mHasVisited = true;
+        mTiles[438].mHasVisited = true;
+        mTiles[457].mHasVisited = true;
+        mTiles[466].mHasVisited = true;
+        mTiles[485].mHasVisited = true;
+        mTiles[486].mHasVisited = true;
+        mTiles[487].mHasVisited = true;
+        mTiles[488].mHasVisited = true;
+        mTiles[489].mHasVisited = true;
+        mTiles[490].mHasVisited = true;
+        mTiles[491].mHasVisited = true;
+        mTiles[492].mHasVisited = true;
+        mTiles[493].mHasVisited = true;
+        mTiles[494].mHasVisited = true;
+        mTiles[513].mHasVisited = true;
+        mTiles[522].mHasVisited = true;
+        mTiles[541].mHasVisited = true;
+        mTiles[550].mHasVisited = true;
+        mTiles[657].mHasVisited = true;
+        mTiles[658].mHasVisited = true;
+    }
+
+    void Grid::ResetOrbState(Tiles Tile) {
+
+        Tile.mHasVisited = false;
+    }
 
 	int Grid::GetColumns() {
 
