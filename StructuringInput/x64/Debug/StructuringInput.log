@@ -1,2 +1,12 @@
-﻿  GameScreen.cpp
+﻿  Ghost.cpp
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(18,47): warning C4305: 'argument': truncation from 'double' to 'float'
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(157,23): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(157,9): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(156,64): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(155,82): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(200,39): warning C4305: 'argument': truncation from 'double' to 'float'
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(219,40): warning C4305: 'argument': truncation from 'double' to 'float'
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(238,48): warning C4305: 'argument': truncation from 'double' to 'float'
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(253,39): warning C4305: 'argument': truncation from 'double' to 'float'
+E:\C++\SDL\StructuringInput\StructuringInput\Ghost.cpp(307,50): warning C4305: 'argument': truncation from 'double' to 'float'
   StructuringInput.vcxproj -> E:\C++\SDL\StructuringInput\x64\Debug\StructuringInput.exe

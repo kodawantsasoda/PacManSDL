@@ -7,7 +7,7 @@ PacManPlayer::PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap) {
 	mGameMap = gameMap;
 
 	mPacMan = new Texture("PMSpriteSheet.png");
-	mPacMan->ClipLocalTexture(455, 0, 16, 16);
+	mPacMan->ClipLocalTexture(487, 0, 16, 16);
 	mPacMan->PositionTextureArea(mGameMap->mGrid->mTiles[657].mTile.x - OFFSETTEXTURE, mGameMap->mGrid->mTiles[657].mTile.y - OFFSETTEXTURE);
 	mPacMan->ScaleTextureArea(3, 8, 8);
 
@@ -22,8 +22,11 @@ PacManPlayer::PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap) {
 
 	mColliderEntity.SetParent(&mCollider, &mPacMan->mTextureArea);
 
+	//0.05 animation speed
 	mAnimator = new Animator(true, mPacMan, 2, 2, 0.05);
 	mDeathAnimator = new Animator(true, mPacMan, 11, 0, 0.15);
+	
+	mDirection = right;
 
 	mCurrentPositionOnGrid = 657;
 	mScore.push_back(mCurrentPositionOnGrid);
@@ -76,7 +79,24 @@ int PacManPlayer::GetTileInFrontOfMouth() {
 
 void PacManPlayer::Move(char input) {
 
-	mAnimator->Animate();
+	if (mDirection == up) {
+
+		mAnimator->Animate(2);
+	}
+	else if (mDirection == left) {
+
+		mAnimator->Animate(1);
+	}
+	else if(mDirection == down) {
+
+		mAnimator->Animate(3);
+	}
+	else if(mDirection == right) {
+
+		mAnimator->Animate(0);
+	}
+
+	//mAnimator->Animate();
 
 	/*mCollider.x = mPacMan->mTextureArea.x + (mPacMan->mTextureArea.w - mCollider.w) / 2;
 	mCollider.y = mPacMan->mTextureArea.y + (mPacMan->mTextureArea.h - mCollider.h) / 2;*/
@@ -157,24 +177,32 @@ void PacManPlayer::Update() {
 
 			nextTile = mCurrentPositionOnGrid - mGameMap->mGrid->GetColumns();
 			mCurrentInput = 'W';
+
+			mDirection = up;
 		}
 
 		else if (mInput->IsKeyPressed(SDL_SCANCODE_A) || mInput->IsKeyHeld(SDL_SCANCODE_A)) {
 
 			nextTile = mCurrentPositionOnGrid - 1;
 			mCurrentInput = 'A';
+
+			mDirection = left;
 		}
 
 		else if (mInput->IsKeyPressed(SDL_SCANCODE_S) || mInput->IsKeyHeld(SDL_SCANCODE_S)) {
 
 			nextTile = mCurrentPositionOnGrid + mGameMap->mGrid->GetColumns();
 			mCurrentInput = 'S';
+
+			mDirection = down;
 		}
 
 		else if (mInput->IsKeyPressed(SDL_SCANCODE_D) || mInput->IsKeyHeld(SDL_SCANCODE_D)) {
 
 			nextTile = mCurrentPositionOnGrid + 1;
 			mCurrentInput = 'D';
+
+			mDirection = right;
 		}
 	}
 	
@@ -221,7 +249,12 @@ void PacManPlayer::Render() {
 	//if pac-man has collided with orb, we fill in the orb with a black square
 	for (int i = 0; i < mScore.size(); i++) {
 
-		Graphics::Instance()->FillRectInGrid(mGameMap->mGrid->mTiles[mScore[i]].mTile, 0, 0, 0, 0);
+		//if i == max break;
+
+		if (mGameMap->mGrid->mTiles[mScore[i]].mHasVisited) {
+
+			Graphics::Instance()->FillRectInGrid(mGameMap->mGrid->mTiles[mScore[i]].mTile, 0, 0, 0, 0);
+		}
 	}
 	
 	mPacMan->Render();

@@ -12,6 +12,9 @@ using namespace SDLCore;
 class PacManPlayer {
 
 public:
+	enum PACMAN_DIRECTION { up, right, down, left};
+
+public:
 	//constructors & functions
 	PacManPlayer(SDL_Rect moveSquare, GameMap* gameMap);
 	~PacManPlayer();
@@ -49,6 +52,8 @@ public:
 
 	const int XPOSDEATHCLIP = 487;
 	const int OFFSETTEXTURE = 8;
+
+	PACMAN_DIRECTION mDirection;
 	
 	//change to mCurrentPositionOnGrid
 	int mCurrentPositionOnGrid;
@@ -62,6 +67,7 @@ private:
 	//references
 	InputManager* mInput;
 	Animator* mAnimator;
+	Animator* mAnimatorLeft;
 	Animator* mDeathAnimator;
 	Timer mTimer;
 	Timer mPowerUpTimer;

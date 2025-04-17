@@ -45,9 +45,11 @@ private:
 	bool mIsPlaying;
 	bool mIsNextLevel;
 	bool mMapAnimation;
+	bool mGameOver;
 
 	int* mRoundScore;
 	int mRoundNum;
+	int mNumLives;
 };
 
 #endif

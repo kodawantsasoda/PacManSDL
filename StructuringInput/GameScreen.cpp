@@ -23,11 +23,13 @@ GameScreen::GameScreen() {
 	mIsPlaying = true;
 	mIsNextLevel = false;
 	mMapAnimation = false;
+	mGameOver = false;
 
 	mTimer = Timer();
 
 	mRoundScore = &mPacMan->mScore[0];
 	mRoundNum = 1;
+	mNumLives = 3;
 }
 
 GameScreen::~GameScreen() {
@@ -99,11 +101,11 @@ void GameScreen::Update() {
 			mGameMap->Update();
 
 			//reinitializing round score 245
-			if (mRoundScore == NULL && mPacMan->mScore.size() % 2 != 0) 
+			if (mRoundScore == NULL && mPacMan->mScore.size() % 245 != 0) 
 				mRoundScore = &mPacMan->mScore[0];
 
 			//checking if player completed level
-			if (mRoundScore != NULL && mPacMan->mScore.size() % 2 == 0 && mIsPlaying) {
+			if (mRoundScore != NULL && mPacMan->mScore.size() % 245 == 0 && mIsPlaying) {
 
 				mIsNextLevel = true;
 				mRoundScore = 0;
@@ -145,11 +147,7 @@ void GameScreen::Update() {
 	}
 
 	if (mIsNextLevel) {
-		//printf("papa\n");
-		//initiate animation stuff
-		//reset positions
-		//reset score
-		//reset orbs
+
 		mIsPlaying = false;
 
 		mBlinky->GameOver();
@@ -169,13 +167,9 @@ void GameScreen::Update() {
 			std::string roundUpdate = "Round " + std::to_string(mRoundNum);
 			mUI->mRound->UpdateTextFont(roundUpdate, mUI->mFontColor);
 
-			for (auto tile : mGameMap->mGrid->mTiles) {
+			for (auto& tile : mGameMap->mGrid->mTiles) {
 
-				if (tile.mHasVisited) {
-					printf("rrr\n");
-					tile.mHasVisited = false;
-					
-				}
+				tile.mHasVisited = false;
 			}
 
 			mGameMap->mGrid->SetNonOrbs();
@@ -188,8 +182,21 @@ void GameScreen::Update() {
 
 		if (!mPacMan->GameOver()) {
 
+			mNumLives--;
+
+			if (mNumLives == 2)
+				mUI->mIsRevealPac3 = false;
+			else if (mNumLives == 1)
+				mUI->mIsRevealPac2 = false;
+			else
+				mUI->mIsRevealPac1 = false;
+			
+			//if lives != 0
 			mIsDying = false;
 			mIsReady = true;
+
+			//else GAMEOVER!
+
 
 			mTimer.ResetTimer();
 		}
@@ -215,22 +222,68 @@ void GameScreen::Update() {
 		mPacMan->Reset();
 		mPacMan->mColliderEntity.FollowParent();
 
-		mUI->mIsRevealPlayerOne = true;
-		mUI->mIsRevealReady = true;
+		if (mNumLives == 0) {
 
-		if (mUI->mIsRevealPlayerOne && mTimer.DeltaTime() >= 1.0) {
-
-			mUI->mIsRevealPlayerOne = false;
+			mGameOver = true;
+			mUI->mIsRevealGameOver = true;
+			mIsReady = false;
 			mIsHit = false;
 		}
-		if (mTimer.DeltaTime() >= 3.0) {
 
-			mUI->mIsRevealReady = false;
+		else {
+
+			mUI->mIsRevealPlayerOne = true;
+			mUI->mIsRevealReady = true;
+
+			if (mUI->mIsRevealPlayerOne && mTimer.DeltaTime() >= 1.0) {
+
+				mUI->mIsRevealPlayerOne = false;
+				mIsHit = false;
+			}
+			if (mTimer.DeltaTime() >= 3.0) {
+
+				mUI->mIsRevealReady = false;
 			
-			mIsReady = false;
-			mIsPlaying = true;
+				mIsReady = false;
+				mIsPlaying = true;
 
-			mRoundScore = NULL;
+				mRoundScore = NULL;
+			}
+		}
+	}
+
+	if (mGameOver) {
+
+		//mUI->mRevealGameOver = true;
+		printf("GAME\n");
+		if (mInput->IsKeyPressed(SDL_SCANCODE_SPACE)) {
+
+			mGameOver = false;
+			//mUI->mRevealGameOver = false;
+			
+			for (auto& tile : mGameMap->mGrid->mTiles) {
+
+				tile.mHasVisited = false;
+			}
+
+			mGameMap->mGrid->SetNonOrbs();
+
+			mPacMan->mScore.clear();
+
+			mNumLives = 3;
+			
+			mRoundNum = 1;
+			std::string roundUpdate = "Round " + std::to_string(mRoundNum);
+			mUI->mRound->UpdateTextFont(roundUpdate, mUI->mFontColor);
+
+			mIsReady = true;
+			mUI->mIsRevealGameOver = false;
+
+			mUI->mIsRevealPac1 = true;
+			mUI->mIsRevealPac2 = true;
+			mUI->mIsRevealPac3 = true;
+
+			mTimer.ResetTimer();
 		}
 	}
 
@@ -241,6 +294,8 @@ void GameScreen::Update() {
 
 	if (mPacMan->mScore.size() != 0)
 		mUI->mScore->UpdateTextFont(currentScore, mUI->mFontColor);
+	else
+		mUI->mScore->UpdateTextFont("0", mUI->mFontColor);
 }
 
 void GameScreen::Render() {

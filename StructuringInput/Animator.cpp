@@ -20,7 +20,7 @@ namespace SDLCore {
 		this->numberOfSprites = numberOfSprites;
 		this->isSpriteSheet = isSpriteSheet;
 		mStartFrame = startFrame;
-		startFrame = mCurrentFrame;
+		mCurrentFrame = startFrame;
 		mAnimationSpeed = speed;
 
 		mX = mText->mImageClip.x;
@@ -49,6 +49,49 @@ namespace SDLCore {
 				
 				else
 					mText->mImageClip.x = mX + (mText->mImageClip.w * mCurrentFrame);
+
+				if (mCurrentFrame == mStartFrame) {
+
+					mAnimationCycleComplete = true;
+					//printf("CYCLED\n");
+				}
+			}
+		}
+	}
+
+	void Animator::Animate(int lineSkip) {
+
+		mTimer.Update();
+
+		if (isSpriteSheet) {
+
+			if (mTimer.DeltaTime() > mAnimationSpeed) {
+
+				mTimer.ResetTimer();
+
+				mCurrentFrame++;
+				printf("FRAME # %d\n", mCurrentFrame);
+
+				if (mCurrentFrame > numberOfSprites) {
+
+					mCurrentFrame = 0;
+					mText->mImageClip.x = mX - (mText->mImageClip.w * numberOfSprites);
+					mText->mImageClip.y = mY + (mText->mImageClip.h * lineSkip);
+				}
+
+				else {
+
+					if (mCurrentFrame != numberOfSprites) {
+
+						mText->mImageClip.x += (mText->mImageClip.w * mCurrentFrame);
+						mText->mImageClip.y = mY + (mText->mImageClip.h * lineSkip);
+					}
+					else {
+
+						mText->mImageClip.x = mX;
+						mText->mImageClip.y = mY;
+					}
+				}
 
 				if (mCurrentFrame == mStartFrame) {
 

@@ -11,6 +11,7 @@ namespace SDLCore {
 		~Animator();
 
 		void Animate();
+		void Animate(int lineSkip);
 
 		void Init(bool isSpriteSheet, Texture* referenceTexture, int numberOfSprites, int startFrame, float speed);
 

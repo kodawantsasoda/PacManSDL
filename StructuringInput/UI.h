@@ -20,9 +20,18 @@ public:
 	Texture* mPlayerOne;
 	Texture* mReady;
 	Texture* mRound;
+	Texture* mGameOver;
+	Texture* mPacMan;
+	Texture* mPacMan2;
+	Texture* mPacMan3;
 
 	bool mIsRevealPlayerOne;
 	bool mIsRevealReady;
+	bool mIsRevealGameOver;
+
+	bool mIsRevealPac1;
+	bool mIsRevealPac2;
+	bool mIsRevealPac3;
 
 	SDL_Color mFontColor;
 
