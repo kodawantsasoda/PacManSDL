@@ -131,6 +131,13 @@ void PacManPlayer::Move(char input) {
 
 		mScore.push_back(mCurrentPositionOnGrid);
 		mGameMap->mGrid->mTiles[mCurrentPositionOnGrid].mHasVisited = true;
+
+		//power up check
+		if (mCurrentPositionOnGrid == 85 || mCurrentPositionOnGrid == 110 || mCurrentPositionOnGrid == 645 || mCurrentPositionOnGrid == 670) {
+
+			mIsPoweredUp = true;
+			printf("POWER-UP\n");
+		}
 	}
 
 	else
@@ -160,10 +167,13 @@ bool PacManPlayer::GameOver() {
 void PacManPlayer::SetDeathFrame() {
 
 	mPacMan->mImageClip.x = XPOSDEATHCLIP;
+	mPacMan->mImageClip.y = 0;
 	mDeathAnimator->Init(true, mPacMan, 11, 0, 0.15);
 }
 
 void PacManPlayer::Update() {
+
+	//printf("%d\n", mIsPoweredUp);
 
 	int nextTile = -1;
 
@@ -232,12 +242,6 @@ void PacManPlayer::Update() {
 		}
 
 		mTimer.ResetTimer();
-	}
-
-	if (mCurrentPositionOnGrid == 670) {
-
-		mIsPoweredUp = true;
-		printf("POWER-UP\n");
 	}
 
 	if (mInput->IsKeyPressed(SDL_SCANCODE_SPACE))

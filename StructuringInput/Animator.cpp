@@ -70,7 +70,6 @@ namespace SDLCore {
 				mTimer.ResetTimer();
 
 				mCurrentFrame++;
-				printf("FRAME # %d\n", mCurrentFrame);
 
 				if (mCurrentFrame > numberOfSprites) {
 

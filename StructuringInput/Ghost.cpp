@@ -55,6 +55,8 @@ Ghost::Ghost(SDL_Rect moveSquare, GameMap* gameMap, std::string name, PacManPlay
 	mCollider.y = mGhost->mTextureArea.y + (mGhost->mTextureArea.h - mCollider.h) / 2;
 
 	mColliderEntity.SetParent(&mCollider, &mGhost->mTextureArea);
+
+	Reset();
 }
 
 Ghost::~Ghost() {
@@ -95,6 +97,7 @@ void Ghost::Reset() {
 		pathToPacMan = (mGameMap->BFS(321, mPacManTile));
 		mGhost->PositionTextureArea(mGameMap->mGrid->mTiles[321].mTile.x, mGameMap->mGrid->mTiles[321].mTile.y);
 		mCurrentPositionOnGrid = 321;
+		//printf("CALLED");
 	}
 	else if (mGhostName == "Pinky") {
 
@@ -114,6 +117,17 @@ void Ghost::Reset() {
 		mGhost->PositionTextureArea(mGameMap->mGrid->mTiles[379].mTile.x, mGameMap->mGrid->mTiles[379].mTile.y);
 		mCurrentPositionOnGrid = 379;
 	}
+
+	mPacMan->mIsPoweredUp = false;
+
+	mIsEatable = false;
+	mIsChanging = false;
+
+	//reset timer for later use
+	mEatableTimer.ResetTimer();
+
+	SpriteClipGhosts();
+	mAnimator = new Animator(true, mGhost, 1, 0, 0.1);
 
 	mIt = 0;
 	mIsMoving = false;
@@ -190,6 +204,7 @@ void Ghost::HandleEatState() {
 
 	else if (mPacMan->mIsPoweredUp && !mIsEatable) {
 
+		//printf("UH OH\n");
 		//ensures only to be performed once so the animator can animate properly
 		mIsEatable = true;
 
@@ -221,11 +236,10 @@ void Ghost::HandleEatState() {
 	}
 	else if (mEatableTimer.DeltaTime() >= 10) {
 
-		printf("%s switched off\n", mGhostName.c_str());
+		//printf("%s switched off\n", mGhostName.c_str());
 
 		mPacMan->mIsPoweredUp = false;
 
-		printf("are we ever here?\n");
 		mIsEatable = false;
 		mIsChanging = false;
 
@@ -264,7 +278,7 @@ void Ghost::Update() {
 
 	//if(!mReturnedHome)
 		//handling checking for changing ghost behavior when pacman eats the power up orb
-		HandleEatState();
+	HandleEatState();
 
 	mPacManTile = mPacMan->mCurrentPositionOnGrid;
 

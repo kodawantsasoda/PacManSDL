@@ -51,6 +51,7 @@ namespace SDLCore {
 
 		mInput->Update();
 		mScreen->Update();
+		mTimer.Update();
 	}
 
 	void GameManager::LateUpdate() {
@@ -68,10 +69,12 @@ namespace SDLCore {
 
 	void GameManager::Run() {
 
+		int frameCount = 0;
 		SDL_Event e;
 		bool quit = false;
 
 		while (quit == false) {
+
 			while (SDL_PollEvent(&e)) {
 				if (e.type == SDL_QUIT)
 					quit = true;
@@ -82,6 +85,8 @@ namespace SDLCore {
 			LateUpdate();
 			//Render last
 			Render();
+
+			//system("cls");
 		}
 	}
 }

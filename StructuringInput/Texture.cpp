@@ -125,8 +125,8 @@ namespace SDLCore{
 		mIsClipped = true;
 
 		//the area of the actual texture
-		mTextureArea.x = 0;
-		mTextureArea.y = 0;
+		//mTextureArea.x = 0;
+		//mTextureArea.y = 0;
 		mTextureArea.w = w;
 		mTextureArea.h = h;
 

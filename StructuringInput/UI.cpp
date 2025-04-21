@@ -103,7 +103,7 @@ void UI::Render() {
 		m1Up->Render();
 
 	mScore->Render();
-	mHighScoreNumber->Render();
+	//mHighScoreNumber->Render();
 
 	if(mIsRevealPlayerOne)
 		mPlayerOne->Render();

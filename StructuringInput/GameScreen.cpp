@@ -19,8 +19,8 @@ GameScreen::GameScreen() {
 	mIsHit = false;
 	mHasAte = true;
 	mIsDying = false;
-	mIsReady = false;
-	mIsPlaying = true;
+	mIsReady = true;
+	mIsPlaying = false;
 	mIsNextLevel = false;
 	mMapAnimation = false;
 	mGameOver = false;
@@ -101,11 +101,11 @@ void GameScreen::Update() {
 			mGameMap->Update();
 
 			//reinitializing round score 245
-			if (mRoundScore == NULL && mPacMan->mScore.size() % 245 != 0) 
+			if (mRoundScore == NULL && mPacMan->mScore.size() % 244 != 0) 
 				mRoundScore = &mPacMan->mScore[0];
 
 			//checking if player completed level
-			if (mRoundScore != NULL && mPacMan->mScore.size() % 245 == 0 && mIsPlaying) {
+			if (mRoundScore != NULL && mPacMan->mScore.size() % 244 == 0 && mIsPlaying) {
 
 				mIsNextLevel = true;
 				mRoundScore = 0;
@@ -115,13 +115,18 @@ void GameScreen::Update() {
 
 			if (mPacMan->mIsPoweredUp) {
 
-				if (mAllGhosts[0]->mEatableTimer.DeltaTime() >= 10) {
+				int eatCount = 0;
 
-					if (!mAllGhosts[0]->mIsEatable) {
+				for (auto ghost : mAllGhosts) {
 
-						mPacMan->mIsPoweredUp = false;
+					if (!ghost->mIsEatable) {
+
+						eatCount++;
 					}
 				}
+
+				if (eatCount == 4)
+					mPacMan->mIsPoweredUp = false;
 			}
 		}
 	}
@@ -202,11 +207,6 @@ void GameScreen::Update() {
 		}
 	}
 
-	if (mMapAnimation) {
-
-
-	}
-
 	if (mIsReady) {
 
 		//printf("Ready?\n");
@@ -217,7 +217,12 @@ void GameScreen::Update() {
 		mPinky->Reset();
 		mInky->Reset();
 		mClyde->Reset();
+
 		//enemy collider reset here
+		mBlinky->mColliderEntity.FollowParent();
+		mPinky->mColliderEntity.FollowParent();
+		mInky->mColliderEntity.FollowParent();
+		mClyde->mColliderEntity.FollowParent();
 
 		mPacMan->Reset();
 		mPacMan->mColliderEntity.FollowParent();
